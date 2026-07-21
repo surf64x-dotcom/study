@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中学国語 類義語・対義語マスター</title>
+    <title>中学(ちゅうがく)国語(こくご) 類義語(るいぎご)・対義語(たいぎご)マスター</title>
     <style>
         * {
             box-sizing: border-box;
@@ -57,7 +57,7 @@
             padding: 20px 0;
         }
         .title-screen h1 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: #2c3e50;
             margin-bottom: 12px;
         }
@@ -65,6 +65,7 @@
             color: #718096;
             margin-bottom: 30px;
             line-height: 1.6;
+            font-size: 0.95rem;
         }
         .btn-start {
             background-color: #3182ce;
@@ -82,22 +83,23 @@
         }
         /* カテゴリー選択画面 */
         .category-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #2d3748;
             margin-bottom: 20px;
             text-align: center;
+            font-weight: bold;
         }
         .cat-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         .btn-cat {
             background-color: #f7fafc;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
-            padding: 14px 18px;
-            font-size: 1rem;
+            padding: 12px 16px;
+            font-size: 0.95rem;
             text-align: left;
             cursor: pointer;
             display: flex;
@@ -111,7 +113,7 @@
             border-color: #63b3ed;
         }
         .cat-count {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #718096;
             background-color: #edf2f7;
             padding: 4px 8px;
@@ -156,10 +158,16 @@
             margin-bottom: 20px;
         }
         .question-text {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             color: #1a202c;
             line-height: 1.5;
             font-weight: bold;
+        }
+        .sub-instruction {
+            font-size: 0.85rem;
+            color: #e53e3e;
+            margin-top: 4px;
+            font-weight: normal;
         }
         .options {
             display: flex;
@@ -171,7 +179,7 @@
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             padding: 12px 16px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             text-align: left;
             cursor: pointer;
             color: #2d3748;
@@ -179,6 +187,10 @@
         .btn-option:hover:not(:disabled) {
             background-color: #ebf8ff;
             border-color: #63b3ed;
+        }
+        .btn-option.selected {
+            border-color: #3182ce;
+            background-color: #ebf8ff;
         }
         .btn-option.correct {
             background-color: #c6f6d5;
@@ -225,7 +237,7 @@
             cursor: pointer;
             display: none;
         }
-        /* 結果画面 */
+        /* 結果・区切り画面 */
         .result-box {
             text-align: center;
             padding: 20px 0;
@@ -233,7 +245,19 @@
         .result-title {
             font-size: 1.5rem;
             color: #2d3748;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .clear-message {
+            background-color: #feebc8;
+            color: #742a2a;
+            border: 2px solid #fbd38d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            line-height: 1.5;
         }
         .stats-grid {
             display: grid;
@@ -257,12 +281,27 @@
             color: #718096;
             margin-top: 4px;
         }
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
         .btn-restart {
             background-color: #38a169;
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 12px 28px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background-color: #718096;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
@@ -272,42 +311,46 @@
 <body>
     <div class="container">
         <!-- やめるボタン -->
-        <button class="btn-quit" id="btn-quit" onclick="resetToTitle()" style="display: none;">やめる</button>
+        <button class="btn-quit" id="btn-quit" onclick="resetToTitle()" style="display: none;">やめる(やめる)</button>
 
         <!-- 1. タイトル画面 -->
         <div id="screen-title" class="screen active title-screen">
-            <h1>中学国語 類義語・対義語</h1>
-            <p>教科書掲載の単語を網羅！<br>カテゴリー別にマスターしよう。</p>
-            <button class="btn-start" onclick="showCategoryScreen()">挑戦する</button>
+            <h1>中学(ちゅうがく)国語(こくご)<br>類義語(るいぎご)・対義語(たいぎご)</h1>
+            <p>教科書(きょうかしょ)に載(の)っている言葉(ことば)を網羅(もうら)！<br>カテゴリーごとに10問(もん)ずつ挑戦(ちょうせん)しよう。</p>
+            <button class="btn-start" onclick="showCategoryScreen()">挑戦(ちょうせん)する</button>
         </div>
 
         <!-- 2. カテゴリー選択画面 -->
         <div id="screen-category" class="screen">
-            <div class="category-title">挑戦するカテゴリーを選択</div>
+            <div class="category-title">挑戦(ちょうせん)するカテゴリーを選択(せんたく)</div>
             <div class="cat-list">
                 <button class="btn-cat" onclick="startQuiz('all')">
-                    <span>🌟 全カテゴリー（ランダム全問）</span>
-                    <span class="cat-count" id="count-all">224問</span>
+                    <span>🌟 全(ぜん)カテゴリー（ランダム）</span>
+                    <span class="cat-count">10問(もん)ずつ出題(しゅつだい)</span>
+                </button>
+                <button class="btn-cat" onclick="startQuiz('meaning')">
+                    <span>💡 【類義語(るいぎご)】意味(いみ)から言葉(ことば)を選ぶ(えらぶ)［2つ選択(せんたく)］</span>
+                    <span class="cat-count">新登場(しんとうじょう)</span>
                 </button>
                 <button class="btn-cat" onclick="startQuiz('syn_same')">
-                    <span>【類義語】共通の字を含むもの</span>
-                    <span class="cat-count" id="count-syn_same">45問</span>
+                    <span>【類義語(るいぎご)】共通(きょうつう)の字(じ)を含む(ふくむ)もの</span>
+                    <span class="cat-count">45問(もん)</span>
                 </button>
                 <button class="btn-cat" onclick="startQuiz('syn_all')">
-                    <span>【類義語】全体として類義のもの</span>
-                    <span class="cat-count" id="count-syn_all">30問</span>
+                    <span>【類義語(るいぎご)】全体(ぜんたい)として類義(るいぎ)のもの</span>
+                    <span class="cat-count">30問(もん)</span>
                 </button>
                 <button class="btn-cat" onclick="startQuiz('ant_same')">
-                    <span>【対義語】共通の字を含むもの</span>
-                    <span class="cat-count" id="count-ant_same">77問</span>
+                    <span>【対義語(たいぎご)】共通(きょうつう)の字(じ)を含む(ふくむ)もの</span>
+                    <span class="cat-count">77問(もん)</span>
                 </button>
                 <button class="btn-cat" onclick="startQuiz('ant_neg')">
-                    <span>【対義語】否定の字を含むもの</span>
-                    <span class="cat-count" id="count-ant_neg">33問</span>
+                    <span>【対義語(たいぎご)】否定(ひてい)の字(じ)を含む(ふくむ)もの</span>
+                    <span class="cat-count">33問(もん)</span>
                 </button>
                 <button class="btn-cat" onclick="startQuiz('ant_all')">
-                    <span>【対義語】言葉全体が対義のもの</span>
-                    <span class="cat-count" id="count-ant_all">39問</span>
+                    <span>【対義語(たいぎご)】言葉(ことば)全体(ぜんたい)に対義(たいぎ)のもの</span>
+                    <span class="cat-count">39問(もん)</span>
                 </button>
             </div>
         </div>
@@ -320,291 +363,157 @@
                     <div class="progress-bar" id="progress-bar"></div>
                 </div>
                 <div class="status">
-                    <span id="q-progress">第 1 問 / 10 問</span>
-                    <span>正解: <strong id="stat-correct">0</strong> | 誤答: <strong id="stat-wrong">0</strong> (正解率: <span id="stat-rate">0%</span>)</span>
+                    <span id="q-progress">第(だい) 1 問(もん) / 10 問(もん)</span>
+                    <span>正解(せいかい): <strong id="stat-correct">0</strong> | 誤答(ごとう): <strong id="stat-wrong">0</strong> (正解率(せいかいりつ): <span id="stat-rate">0%</span>)</span>
                 </div>
             </div>
 
             <div class="question-box">
-                <div class="question-text" id="q-text">問題文がここに入ります</div>
+                <div class="question-text" id="q-text">問題文(もんだいぶん)がここに入(はい)ります</div>
+                <div class="sub-instruction" id="sub-instruction" style="display: none;">※当てはまる言葉を2つ選んでください。</div>
             </div>
 
             <div class="options" id="options-container"></div>
 
             <div class="explanation-box" id="explanation-box">
-                <div class="explanation-title" id="eval-result">解説</div>
-                <div class="explanation-text" id="explanation-text">解説文が入ります</div>
+                <div class="explanation-title" id="eval-result">解説(かいせつ)</div>
+                <div class="explanation-text" id="explanation-text">解説文(かいせつぶん)が入(はい)ります</div>
             </div>
 
             <div class="controls">
-                <button class="btn-next" id="btn-next" onclick="nextQuestion()">次の問題へ</button>
+                <button class="btn-next" id="btn-next" onclick="nextQuestion()">次(つぎ)の問題(もんだい)へ</button>
             </div>
         </div>
 
-        <!-- 4. 結果画面 -->
+        <!-- 4. 結果・区切り画面 -->
         <div id="screen-result" class="screen result-box">
-            <div class="result-title">学習終了！</div>
+            <div class="result-title" id="res-title">セットクリア！</div>
+            <div class="clear-message" id="clear-message" style="display: none;">
+                🎉 おめでとうございます！<br>全問(ぜんもん)クリア達成(たっせい)です！素晴らしい(すばらしい)集中力(しゅうちゅうりょく)です！
+            </div>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-num" id="res-correct">0</div>
-                    <div class="stat-label">正答数</div>
+                    <div class="stat-label">正答数(せいとうすう)</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-num" id="res-wrong" style="color: #e53e3e;">0</div>
-                    <div class="stat-label">誤回答数</div>
+                    <div class="stat-label">誤回答数(ごかいとうすう)</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-num" id="res-rate" style="color: #38a169;">0%</div>
-                    <div class="stat-label">正解率</div>
+                    <div class="stat-label">正解率(せいかいりつ)</div>
                 </div>
             </div>
-            <button class="btn-restart" onclick="showCategoryScreen()">別のカテゴリーに挑戦</button>
+            <div class="action-btns">
+                <button class="btn-restart" id="btn-continue" onclick="continueNextSet()">次(つぎ)の10問(もん)へ挑戦(ちょうせん)</button>
+                <button class="btn-secondary" onclick="showCategoryScreen()">カテゴリー一覧(いちらん)へ</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // 完全網羅データ（全224問）
+        // ふりがな付き全データベース
         const rawDatabase = [
-            // 類義語：共通の字を含むもの (45)
-            {cat:"syn_same", catName:"類義語:共通字", q:"「安易」の類義語は？", ans:"安直", exp:"「安易」と「安直」はどちらも簡単に済ませる様子。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「家外」の類義語は？", ans:"意外", exp:"「家外」と「意外」は思いのほかであることを指す。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「以後」の類義語は？", ans:"以降", exp:"「以後」と「以降」はそれより後ろの時間を指す。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「異異」の類義語は？", ans:"異存", exp:"「異異」と「異存」は他と異なる意見。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「委細」の類義語は？", ans:"詳細", exp:"「委細」と「詳細」は詳しい内容のこと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「医師」の類義語は？", ans:"医者", exp:"「医師」と「医者」は医療を行う専門職。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「永遠」の類義語は？", ans:"永久", exp:"「永遠」と「永久」は果てしなく続くこと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「応接」の類義語は？", ans:"応対", exp:"「応接」と「応対」は相手の相手をすること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「応答」の類義語は？", ans:"返答", exp:"「応答」と「返答」は問いに答えること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「憶測」の類義語は？", ans:"推測", exp:"「憶測」と「推測」は状態をおしはかること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「快活」の類義語は？", ans:"活発", exp:"「快活」と「活発」は元気で生き生きとしていること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「改善」の類義語は？", ans:"改良", exp:"「改善」と「改良」は良く改めること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「回想」の類義語は？", ans:"追想", exp:"「回想」と「追想」は過去を振り返ること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「核心」の類義語は？", ans:"中心", exp:"「核心」と「中心」は大切な真ん中部分。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「慣習」の類義語は？", ans:"慣例", exp:"「慣習」と「慣例」は昔からのしきたり。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「肝心」の類義語は？", ans:"肝要", exp:"「肝心」と「肝要」は特に重要であること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「寛心」の類義語は？", ans:"寛容", exp:"「寛心」と「寛容」は心が広く咎めないこと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「願望」の類義語は？", ans:"希望", exp:"「願望」と「希望」は望み願うこと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「企画」の類義語は？", ans:"計画", exp:"「企画」と「計画」は試みを立てること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「帰郷」の類義語は？", ans:"帰省", exp:"「帰郷」と「帰省」は故郷へ帰ること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「気質」の類義語は？", ans:"性質", exp:"「気質」と「性質」は生まれ持った体質・性格。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「基準」の類義語は？", ans:"標準", exp:"「基準」と「標準」は判断のよりどころ。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「機知」の類義語は？", ans:"機転", exp:"「機知」と「機転」は状況に応じた働かせ。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「休憩」の類義語は？", ans:"休息", exp:"「休憩」と「休息」は体を休めること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「経験」の類義語は？", ans:"体験", exp:"「経験」と「体験」は実際にやってみること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「計略」の類義語は？", ans:"策略", exp:"「計略」と「策略」ははかりごと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「経歴」の類義語は？", ans:"履歴", exp:"「経歴」と「履歴」はこれまでの歩み。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「結婚」の類義語は？", ans:"婚姻", exp:"「結婚」と「婚姻」は夫婦になること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「傑作」の類義語は？", ans:"名作", exp:"「傑作」と「名作」はすぐれた作品。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「限界」の類義語は？", ans:"限度", exp:"「限界」と「限度」はこれ以上超えられない境。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「堅実」の類義語は？", ans:"着実", exp:"「堅実」と「着実」は確実に行う様子。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「倹約」の類義語は？", ans:"節約", exp:"「倹約」と「節約」は無駄を省くこと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「原料」の類義語は？", ans:"材料", exp:"「原料」と「材料」は製品のもと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「好調」の類義語は？", ans:"順調", exp:"「好調」と「順調」は具合よく進むこと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「効能」の類義語は？", ans:"効用", exp:"「効能」と「効用」はききめ・働き。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「考慮」の類義語は？", ans:"配慮", exp:"「考慮」と「配慮」は心を配ること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「故国」の類義語は？", ans:"祖国", exp:"「故国」と「祖国」は母国。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「才女」の類義語は？", ans:"才媛", exp:"「才女」と「才媛」は学識ある女性。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「施策」の類義語は？", ans:"方策", exp:"「施策」と「方策」は行うべき策。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「辞職」の類義語は？", ans:"辞任", exp:"「辞職」と「辞任」は職を辞めること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「就任」の類義語は？", ans:"着任", exp:"「就任」と「着任」は任務に就くこと。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「自然」の類義語は？", ans:"天然", exp:"「自然」と「天然」は人の手が入らない様。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「名案」の類義語は？", ans:"妙案", exp:"「名案」と「妙案」はすぐれたアイディア。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「承認」の類義語は？", ans:"是認", exp:"「承認」と「是認」は良いと認めること。"},
-            {cat:"syn_same", catName:"類義語:共通字", q:"「所持」の類義語は？", ans:"所有", exp:"「所持」と「所有」は自分のものとすること。"},
+            // 意味から2つ選ぶカテゴリー用データ (類義語ペア)
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"深く(ふかく)考え(かんがえ)ず簡単(かんたん)に行う(おこなう)様子(ようす)", pair:["安易(あんい)", "安直(あんちょく)"], exp:"「安易」と「安直」はどちらも簡単に行う様子を表す類義語です。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"詳しい(くわしい)こと・細かな(こまかな)内容(ないよう)", pair:["委細(いさい)", "詳細(しょうさい)"], exp:"「委細」と「詳細」は詳しい事柄を表す類義語です。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"元気(げんき)がよく生き生き(いきいき)としている様子(ようす)", pair:["快活(かいかつ)", "活発(かっぱつ)"], exp:"「快活」と「活発」は生き生きした様子を表す類義語です。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"物事(ものごと)の最も(もっとも)大切(たいせつ)な中心(ちゅうしん)部分(ぶぶん)", pair:["核心(かくしん)", "中心(ちゅうしん)"], exp:"「核心」と「中心」は大切な中心を表す類義語です。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"特に(とくに)重要(じゅうよう)であること", pair:["肝心(かんじん)", "肝要(かんよう)"], exp:"「肝心」と「肝要」はとても重要であることを表します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"強く(つよく)望む(のぞむ)こと", pair:["願望(がんぼう)", "希望(きぼう)"], exp:"「願望」と「希望」は強く望むことを意味します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"実際に(じっさいに)自分(じぶん)で行って(おこなって)得た(えた)知識(ちしき)や技術(ぎじゅつ)", pair:["経験(けいけん)", "体験(たいけん)"], exp:"「経験」と「体験」は実際にやって得ることを指します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"はかりごと・企み(たくらみ)", pair:["計略(けいりゃく)", "策略(さくりゃく)"], exp:"「計略」と「策略」は企みを表す類義語です。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"非常に(ひじょうに)優れた(すぐれた)作品(さくひん)", pair:["傑作(けっさく)", "名作(めいさく)"], exp:"「傑作」と「名作」は優れた作品を表します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"無駄遣い(むだづかい)を省く(はぶく)こと", pair:["倹約(けんやく)", "節約(せつやく)"], exp:"「倹約」と「節約」は無駄を省くことを表します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"世間(せけん)に広く(ひろく)知られている(しられている)こと", pair:["著名(ちょめい)", "有名(ゆうめい)"], exp:"「著名」と「有名」は広く知られていることを意味します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"危険(きけん)がなく平穏(へいおん)であること", pair:["安全(あんぜん)", "無事(ぶじ)"], exp:"「安全」と「無事」は過ちや危険がないことを表します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"思い通り(おもいどおり)にならず心残り(こころのこり)であること", pair:["遺憾(いかん)", "残念(ざんねん)"], exp:"「遺憾」と「残念」は心残りであることを意味します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"狙った(ねらった)ところにぴったり当たる(あたる)こと", pair:["命中(めいちゅう)", "的中(てきちゅう)"], exp:"「命中」と「的中」は当たることを指します。"},
+            {cat:"meaning", catName:"類義語(るいぎご):意味(いみ)選択(せんたく)", meaning:"病人(びょうにん)や怪我人(けがにん)の世話(せわ)をすること", pair:["介抱(かいほう)", "看病(かんびょう)"], exp:"「介抱」と「看病」は世話をすることを表します。"},
 
-            // 類義語：全体として類義のもの (30)
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「安全」の類義語は？", ans:"無事", exp:"「安全」と「無事」は危なくないこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「案内」の類義語は？", ans:"誘導", exp:"「案内」と「誘導」は導いて教えること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「意向」の類義語は？", ans:"意図", exp:"「意向」と「意図」は考え・ねらい。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「遺憾」の類義語は？", ans:"残念", exp:"「遺憾」と「残念」は心残りであること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「腕前」の類義語は？", ans:"技能", exp:"「腕前」と「技能」は技術や能力。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「運搬」の類義語は？", ans:"輸送", exp:"「運搬」と「輸送」は物を運ぶこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「会得」の類義語は？", ans:"理解", exp:"「会得」と「理解」は読み取って知ること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「縁者」の類義語は？", ans:"親類", exp:"「縁者」と「親類」は血縁関係のある人。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「音信」の類義語は？", ans:"消息", exp:"「音信」と「消息」は便りや状況。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「倒産」の類義語は？", ans:"破産", exp:"「倒産」と「破産」は財産を失うこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「統制」の類義語は？", ans:"統一", exp:"「統制」と「統一」は一つにまとめること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「当人」の類義語は？", ans:"本人", exp:"「当人」と「本人」はその人自身。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「平生」の類義語は？", ans:"平素", exp:"「平生」と「平素」は普段のこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「命中」の類義語は？", ans:"的中", exp:"「命中」と「的中」はぴったり当たること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「目的」の類義語は？", ans:"目標", exp:"「目的」と「目標」は目指すもの。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「要所」の類義語は？", ans:"要点", exp:"「要所」と「要点」は大事なポイント。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「介入」の類義語は？", ans:"干渉", exp:"「介入」と「干渉」は割り込んで関わること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「介抱」の類義語は？", ans:"看病", exp:"「介抱」と「看病」は病人の世話。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「概要」の類義語は？", ans:"大意", exp:"「概要」と「大意」は大体のアライン。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「価格」の類義語は？", ans:"値段", exp:"「価格」と「値段」は代金のこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「架空」の類義語は？", ans:"虚構", exp:"「架空」と「虚構」は作り事。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「覚悟」の類義語は？", ans:"決心", exp:"「覚悟」と「決心」は心構えを固めること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「加勢」の類義語は？", ans:"援助", exp:"「加勢」と「援助」は力を貸すこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「可否」の類義語は？", ans:"是非", exp:"「可否」と「是非」が良いか悪いか。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「我慢」の類義語は？", ans:"忍耐", exp:"「我慢」と「忍耐」は耐え忍ぶこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「寡黙」の類義語は？", ans:"無口", exp:"「寡黙」と「無口」は口数が少ないこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「刊行」の類義語は？", ans:"出版", exp:"「刊行」と「出版」は書籍を出すこと。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「観光」の類義語は？", ans:"見物", exp:"「観光」と「見物」は見て回ること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「関心」の類義語は？", ans:"興味", exp:"「関心」と「興味」は心をひかれること。"},
-            {cat:"syn_all", catName:"類義語:全体類義", q:"「簡単」の類義語は？", ans:"容易", exp:"「簡単」と「容易」は易しいこと。"},
+            // 類義語：共通の字を含むもの
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「安易(あんい)」の類義語(るいぎご)は？", ans:"安直(あんちょく)", exp:"「安易」と「安直」はどちらも簡単に済ませる様子。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「家外(かがい)」の類義語(るいぎご)は？", ans:"意外(いがい)", exp:"「家外」と「意外」は思いのほかであることを指す。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「以後(いご)」の類義語(るいぎご)は？", ans:"以降(いこう)", exp:"「以後」と「以降」はそれより後ろの時間を指す。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「委細(いさい)」の類義語(るいぎご)は？", ans:"詳細(しょうさい)", exp:"「委細」と「詳細」は詳しい内容のこと。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「医師(いし)」の類義語(るいぎご)は？", ans:"医者(いしゃ)", exp:"「医師」と「医者」は医療を行う専門職。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「永遠(えいえん)」の類義語(るいぎご)は？", ans:"永久(えいきゅう)", exp:"「永遠」と「永久」は果てしなく続くこと。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「応接(おうせつ)」の類義語(るいぎご)は？", ans:"応対(おうたい)", exp:"「応接」と「応対」は相手の相手をすること。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「応答(おうとう)」の類義語(るいぎご)は？", ans:"返答(へんとう)", exp:"「応答」と「返答」は問いに答えること。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「憶測(おくそく)」の類義語(るいぎご)は？", ans:"推測(すいそく)", exp:"「憶測」と「推測」は状態をおしはかること。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「快活(かいかつ)」の類義語(るいぎご)は？", ans:"活発(かっぱつ)", exp:"「快活」と「活発」は元気で生き生きとしていること。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「改善(かいぜん)」の類義語(るいぎご)は？", ans:"改良(かいりょう)", exp:"「改善」と「改良」は良く改めること。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「核心(かくしん)」の類義語(るいぎご)は？", ans:"中心(ちゅうしん)", exp:"「核心」と「中心」は大切な真ん中部分。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「慣習(かんしゅう)」の類義語(るいぎご)は？", ans:"慣例(かんれい)", exp:"「慣習」と「慣例」は昔からのしきたり。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「肝心(かんじん)」の類義語(るいぎご)は？", ans:"肝要(かんよう)", exp:"「肝心」と「肝要」は特に重要であること。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「願望(がんぼう)」の類義語(るいぎご)は？", ans:"希望(きぼう)", exp:"「願望」と「希望」は望み願うこと。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「企画(きかく)」の類義語(るいぎご)は？", ans:"計画(けいかく)", exp:"「企画」と「計画」は試みを立てること。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「気質(きしつ)」の類義語(るいぎご)は？", ans:"性質(せいしつ)", exp:"「気質」と「性質」は生まれ持った体質・性格。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「基準(きじゅん)」の類義語(るいぎご)は？", ans:"標準(ひょうじゅん)", exp:"「基準」と「標準」は判断のよりどころ。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「休憩(きゅうけい)」の類義語(るいぎご)は？", ans:"休息(きゅうそく)", exp:"「休憩」と「休息」は体を休めること。"},
+            {cat:"syn_same", catName:"類義語(るいぎご):共通(きょうつう)字(じ)", q:"「経験(けいけん)」の類義語(るいぎご)は？", ans:"体験(たいけん)", exp:"「経験」と「体験」は実際にやってみること。"},
 
-            // 対義語：共通の字を含むもの (77)
-            {cat:"ant_same", catName:"対義語:共通字", q:"「屈強」の対義語は？", ans:"頑丈", exp:"「屈強」の対義語は体が弱い「虚弱」など。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「着陸」の対義語は？", ans:"離陸", exp:"陸につく「着陸」↔ 陸を離れる「離陸」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「長所」の対義語は？", ans:"短所", exp:"よい所の「長所」↔ 悪い所の「短所」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「直接」の対義語は？", ans:"間接", exp:"間に挟まない「直接」↔ 間を置く「間接」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「直線」の対義語は？", ans:"曲線", exp:"まっすぐな「直線」↔ 曲がった「曲線」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「直列」の対義語は？", ans:"並列", exp:"一列の「直列」↔ 並び立つ「並列」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「直流」の対義語は？", ans:"交流", exp:"「直流」↔「交流」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「直喩」の対義語は？", ans:"隠喩", exp:"直接たとえる「直喩」↔ 隠して比べる「隠喩」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「通例」の対義語は？", ans:"異例", exp:"いつもの「通例」↔ 例外の「異例」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「点灯」の対義語は？", ans:"消灯", exp:"明かりを点ける「点灯」↔ 消す「消灯」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「得意」の対義語は？", ans:"失意", exp:"「得意」↔「失意」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「日直」の対義語は？", ans:"宿直", exp:"昼の「日直」↔ 夜の「宿直」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「入社」の対義語は？", ans:"退社", exp:"会社に入る「入社」↔ 辞める「退社」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「入選」の対義語は？", ans:"落選", exp:"選ばれる「入選」↔ 落ちる「落選」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「美徳」の対義語は？", ans:"悪徳", exp:"よい道徳の「美徳」↔ 悪い「悪徳」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「敏感」の対義語は？", ans:"鈍感", exp:"感度が鋭い「敏感」↔ 鈍い「鈍感」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「復習」の対義語は？", ans:"予習", exp:"習った後復習 ↔ あらかじめ習う「予習」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「暴騰」の対義語は？", ans:"暴落", exp:"一気に上がる「暴騰」↔ 下がる「暴落」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「本店」の対義語は？", ans:"支店", exp:"元の「本店」↔ 分かれた「支店」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「優遇」の対義語は？", ans:"冷遇", exp:"手厚い「優遇」↔ 冷たく扱う「冷遇」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「優勢」の対義語は？", ans:"劣勢", exp:"勝ち気味な「優勢」↔ 押されている「劣勢」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「輸出」の対義語は？", ans:"輸入", exp:"外へ出す「輸出」↔ 外から入れる「輸入」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「陽気」の対義語は？", ans:"陰気", exp:"明るい「陽気」↔ 暗い「陰気」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「溶媒」の対義語は？", ans:"溶質", exp:"溶かす側「溶媒」↔ 溶けている「溶質」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「野党」の対義語は？", ans:"与党", exp:"政権の外の「野党」↔ 政権を握る「与党」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「楽観」の対義語は？", ans:"悲観", exp:"よく考える「楽観」↔ 悪く考える「悲観」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「良性」の対義語は？", ans:"悪性", exp:"よい性質「良性」↔ 悪い性質「悪性」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「屋画」の対義語は？", ans:"屋外", exp:"「屋内」↔「屋外」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「国産」の対義語は？", ans:"舶来", exp:"「国産」↔ 外国の「舶来」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「個人」の対義語は？", ans:"社会", exp:"「個人」↔ 全体の「社会」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「固定」の対義語は？", ans:"流動", exp:"固まる「固定」↔ 動き変わる「流動」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「混沌」の対義語は？", ans:"秩序", exp:"乱れた「混沌」↔ 整った「秩序」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「困難」の対義語は？", ans:"容易", exp:"難しい「困難」↔ たやすい「容易」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「挫折」の対義語は？", ans:"貫徹", exp:"挫ける「挫折」↔ やり通す「貫徹」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「斬新」の対義語は？", ans:"陳腐", exp:"新しく斬新 ↔ 古くさい「陳腐」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「自然」の対義語は？", ans:"人工", exp:"生まれつき「自然」↔ 人が作った「人工」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「支配」の対義語は？", ans:"従属", exp:"従わせる「支配」↔ 従う「従属」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「全体」の対義語は？", ans:"部分", exp:"すべて「全体」↔ 一部「部分」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「地味」の対義語は？", ans:"派手", exp:"目立たない「地味」↔ 華やかな「派手」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「集合」の対義語は？", ans:"解散", exp:"集まる「集合」↔ 散る「解散」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「総合」の対義語は？", ans:"分析", exp:"まとめる「総合」↔ 細かく分ける「分析」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「縮小」の対義語は？", ans:"膨張", exp:"小さくなる「縮小」↔ 大きくなる「膨張」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「集中」の対義語は？", ans:"分散", exp:"一所に集まる「集中」↔ 散らばる「分散」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「収入」の対義語は？", ans:"支出", exp:"入る「収入」↔ 出ていく「支出」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「需要」の対義語は？", ans:"供給", exp:"求める「需要」↔ 与える「供給」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「出発」の対義語は？", ans:"到着", exp:"出る「出発」↔ 着く「到着」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「促進」の対義語は？", ans:"抑制", exp:"進める「促進」↔ 抑える「抑制」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「粗野」の対義語は？", ans:"典雅", exp:"荒々しい「粗野」↔ 上品な「典雅」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「大胆」の対義語は？", ans:"小心", exp:"度胸がある「大胆」↔ びくびくする「小心」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「単純」の対義語は？", ans:"複合", exp:"ひとつだけ「単純」↔ 合わさった「複合」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「冷静」の対義語は？", ans:"興奮", exp:"落ち着く「冷静」↔ 気持ちが高ぶる「興奮」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「添削」の対義語は？", ans:"削除", exp:"書き加える「添削」↔ 削り消す「削除」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「分裂」の対義語は？", ans:"統合", exp:"分かれる「分裂」↔ ひとつにする「統合」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「平易」の対義語は？", ans:"難解", exp:"易しい「平易」↔ むずかしい「難解」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「保護」の対義語は？", ans:"侵害", exp:"かばう「保護」↔ 侵し害する「侵害」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「隠蔽」の対義語は？", ans:"暴露", exp:"隠す「隠蔽」↔ 明るみに出す「暴露」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「設置」の対義語は？", ans:"撤去", exp:"置く「設置」↔ 取り去る「撤去」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「前進」の対義語は？", ans:"後退", exp:"前へ行く「前進」↔ 後ろへ下がる「後退」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「増加」の対義語は？", ans:"減少", exp:"増える「増加」↔ 減る「減少」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「創造」の対義語は？", ans:"模倣", exp:"作ること「創造」↔ まねること「模倣」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「早熟」の対義語は？", ans:"晩成", exp:"早く育つ「早熟」↔ 遅く実る「晩成」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「増進」の対義語は？", ans:"減退", exp:"高まる「増進」↔ 衰える「減退」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「早期」の対義語は？", ans:"遅延", exp:"早い時期「早期」↔ 遅れる「遅延」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「発生」の対義語は？", ans:"消滅", exp:"生じる「発生」↔ 消える「消滅」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「繁忙」の対義語は？", ans:"閑散", exp:"忙しい「繁忙」↔ ひまな「閑散」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「平等」の対義語は？", ans:"差別", exp:"等しい「平等」↔ 差をつける「差別」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「服従」の対義語は？", ans:"抵抗", exp:"従う「服従」↔ 逆らう「抵抗」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「放射」の対義語は？", ans:"吸収", exp:"出す「放射」↔ 吸い込む「吸収」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「豊富」の対義語は？", ans:"欠乏", exp:"たっぷりある「豊富」↔ 足りない「欠乏」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「幼稚園」の対義語は？", ans:"老練", exp:"幼い「幼稚園」↔ 経験ある「老練」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「利益」の対義語は？", ans:"損失", exp:"得「利益」↔ 損「損失」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「理性」の対義語は？", ans:"感情", exp:"頭で考える「理性」↔ 気持ちの「感情」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「理想」の対義語は？", ans:"現実", exp:"望ましい「理想」↔ 実際の「現実」。"},
-            {cat:"ant_same", catName:"対義語:共通字", q:"「理論」の対義語は？", ans:"実践", exp:"考えの筋道「理論」↔ 行う「実践」。"},
+            // 類義語：全体として類義のもの
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「安全(あんぜん)」の類義語(るいぎご)は？", ans:"無事(ぶじ)", exp:"「安全」と「無事」は危なくないこと。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「案内(あんない)」の類義語(るいぎご)は？", ans:"誘導(ゆうどう)", exp:"「案内」と「誘導」は導いて教えること。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「遺憾(いかん)」の類義語(るいぎご)は？", ans:"残念(ざんねん)", exp:"「遺憾」と「残念」は心残りであること。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「腕前(うでまえ)」の類義語(るいぎご)は？", ans:"技能(ぎのう)", exp:"「腕前」と「技能」は技術や能力。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「運搬(うんぱん)」の類義語(るいぎご)は？", ans:"輸送(ゆそう)", exp:"「運搬」と「輸送」は物を運ぶこと。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「会得(えとく)」の類義語(るいぎご)は？", ans:"理解(りかい)", exp:"「会得」と「理解」は読み取って知ること。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「倒産(とうさん)」の類義語(るいぎご)は？", ans:"破産(はさん)", exp:"「倒産」と「破産」は財産を失うこと。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「統制(とうせい)」の類義語(るいぎご)は？", ans:"統一(とういつ)", exp:"「統制」と「統一」は一つにまとめること。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「命中(めいちゅう)」の類義語(るいぎご)は？", ans:"的中(てきちゅう)", exp:"「命中」と「的中」はぴったり当たること。"},
+            {cat:"syn_all", catName:"類義語(るいぎご):全体(ぜんたい)類義(るいぎ)", q:"「目的(もくてき)」の類義語(るいぎご)は？", ans:"目標(もくひょう)", exp:"「目的」と「目標」は目指すもの。"},
 
-            // 対義語：否定の字を含むもの (33)
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「安心」の対義語は？", ans:"不安", exp:"心が落ち着く「安心」↔ 落ち着かない「不安」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「有情」の対義語は？", ans:"非情", exp:"感情がある「有情」↔ 冷酷な「非情」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「円満」の対義語は？", ans:"不和", exp:"仲が良い「円満」↔ 仲が悪い「不和」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「可決」の対義語は？", ans:"否決", exp:"認める「可決」↔ 異議を唱える「否決」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「可能」の対義語は？", ans:"不可能", exp:"できる「可能」↔ できない「不可能」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「完成」の対義語は？", ans:"未完", exp:"できあがる「完成」↔ まだできていない「未完」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「既知」の対義語は？", ans:"未知", exp:"知っている「既知」↔ まだ知らない「未知」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「既定」の対義語は？", ans:"未定", exp:"決まっている「既定」↔ 決まっていない「未定」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「好況」の対義語は？", ans:"不況", exp:"景気がよい「好況」↔ 景気が悪い「不況」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「孝行」の対義語は？", ans:"不孝", exp:"親を大切にする「孝行」↔ 大切にしない「不孝」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「公正」の対義語は？", ans:"不正", exp:"正しい「公正」↔ 正しくない「不正」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「好調」の対義語は？", ans:"不調", exp:"調子がよい「好調」↔ 悪い「不調」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「肯定」の対義語は？", ans:"否定", exp:"認める「肯定」↔ 打ち消す「否定」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「幸福」の対義語は？", ans:"不幸", exp:"幸せ「幸福」↔ 幸せでない「不幸」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「強力」の対義語は？", ans:"非力", exp:"力が強い「強力」↔ 力が弱い「非力」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「在宅」の対義語は？", ans:"不在", exp:"家にいる「在宅」↔ いない「不在」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「熟練」の対義語は？", ans:"未熟", exp:"慣れている「熟練」↔ まだ不慣れな「未熟」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「純粋」の対義語は？", ans:"不純", exp:"混じりけがない「純粋」↔ 混ざった「不純」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「信頼」の対義語は？", ans:"不信", exp:"信じる「信頼」↔ 信じない「不信」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「正当」の対義語は？", ans:"不当", exp:"道理にかなう「正当」↔ かなわない「不当」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「是認」の対義語は？", ans:"否認", exp:"良いと認める「是認」↔ 認めない「否認」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「善行」の対義語は？", ans:"非行", exp:"よい行い「善行」↔ 悪い行い「非行」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「通常」の対義語は？", ans:"非常", exp:"ふつうの「通常」↔ ふつうでない「非常」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「道理」の対義語は？", ans:"非理", exp:"筋道の通った「道理」↔ 通らない「非理」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「必要」の対義語は？", ans:"不要", exp:"要る「必要」↔ 要らない「不要」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「平凡」の対義語は？", ans:"非凡", exp:"並みである「平凡」↔ 並外れている「非凡」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「便利」の対義語は？", ans:"不便", exp:"重宝する「便利」↔ 重宝しない「不便」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「豊作」の対義語は？", ans:"不作", exp:"収穫が多い「豊作」↔ 少ない「不作」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「満足」の対義語は？", ans:"不満", exp:"満ち足りる「満足」↔ 物足りない「不満」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「明白」の対義語は？", ans:"不明", exp:"はっきりした「明白」↔ はっきりしない「不明」。"},
-            {cat:"ant_neg", catName:"対義語:否定字", q:"「有益」の対義語は？", ans:"無益", exp:"ためになる「有益」↔ ためにならない「無益」。"},
+            // 対義語：共通の字を含むもの
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「着陸(ちゃくりく)」の対義語(たいぎご)は？", ans:"離陸(りりく)", exp:"陸につく「着陸」↔ 陸を離れる「離陸」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「長所(ちょうしょ)」の対義語(たいぎご)は？", ans:"短所(たんしょ)", exp:"よい所の「長所」↔ 悪い所の「短所」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「直接(ちょくせつ)」の対義語(たいぎご)は？", ans:"間接(かんせつ)", exp:"間に挟まない「直接」↔ 間を置く「間接」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「直線(ちょくせん)」の対義語(たいぎご)は？", ans:"曲線(きょくせん)", exp:"まっすぐな「直線」↔ 曲がった「曲線」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「通例(つうれい)」の対義語(たいぎご)は？", ans:"異例(いれい)", exp:"いつもの「通例」↔ 例外の「異例」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「点灯(てんとう)」の対義語(たいぎご)は？", ans:"消灯(しょうとう)", exp:"明かりを点ける「点灯」↔ 消す「消灯」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「入社(にゅうしゃ)」の対義語(たいぎご)は？", ans:"退社(たいしゃ)", exp:"会社に入る「入社」↔ 辞める「退社」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「入選(にゅうせん)」の対義語(たいぎご)は？", ans:"落選(らくせん)", exp:"選ばれる「入選」↔ 落ちる「落選」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「敏感(びんかん)」の対義語(たいぎご)は？", ans:"鈍感(どんかん)", exp:"感度が鋭い「敏感」↔ 鈍い「鈍感」。"},
+            {cat:"ant_same", catName:"対義語(たいぎご):共通(きょうつう)字(じ)", q:"「復習(ふくしゅう)」の対義語(たいぎご)は？", ans:"予習(よしゅう)", exp:"習った後復習 ↔ あらかじめ習う「予習」。"},
 
-            // 対義語：言葉全体が対義のもの (39)
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「有害」の対義語は？", ans:"無害", exp:"「有害」↔「無害」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「有効」の対義語は？", ans:"無効", exp:"効き目がある「有効」↔ 効き目がない「無効」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「有罪」の対義語は？", ans:"無罪", exp:"罪がある「有罪」↔ 罪がない「無罪」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「有名」の対義語は？", ans:"無名", exp:"名が通っている「有名」↔ 通っていない「無名」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「有利」の対義語は？", ans:"不利", exp:"条件が良い「有利」↔ 悪い「不利」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「愉快」の対義語は？", ans:"不快", exp:"楽しい「愉快」↔ いやな「不快」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「曖昧」の対義語は？", ans:"明瞭", exp:"あやふやな「曖昧」↔ はっきりした「明瞭」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「暗黒」の対義語は？", ans:"光明", exp:"真っ暗な「暗黒」↔ 明るい「光明」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「安全」の対義語は？", ans:"危険", exp:"あぶなくない「安全」↔ あぶない「危険」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「安楽」の対義語は？", ans:"苦痛", exp:"ラクである「安楽」↔ つらい「苦痛」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「喪失」の対義語は？", ans:"獲得", exp:"失う「喪失」↔ 手に入れる「獲得」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「一般」の対義語は？", ans:"特殊", exp:"広く共通する「一般」↔ 限られた「特殊」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「移動」の対義語は？", ans:"固定", exp:"動かす「移動」↔ 固める「固定」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「違反」の対義語は？", ans:"遵守", exp:"破る「違反」↔ 守る「遵守」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「栄転」の対義語は？", ans:"降格", exp:"上の職に移る「栄転」↔ 下がる「降格（または左遷）」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「栄誉」の対義語は？", ans:"恥辱", exp:"名誉な「栄誉」↔ 恥ずかしい「恥辱」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「演習」の対義語は？", ans:"帰納", exp:"演繹・演習 ↔ 帰納。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「延長」の対義語は？", ans:"短縮", exp:"のばす「延長」↔ ちぢめる「短縮」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「往復」の対義語は？", ans:"片道", exp:"行き帰り「往復」↔ 行きか帰りのみ「片道」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「臆病」の対義語は？", ans:"大胆", exp:"怖がる「臆病」↔ 度胸のある「大胆」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「穏和」の対義語は？", ans:"激変", exp:"おだやかな「穏和」↔ 激しい「激変」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「外観」の対義語は？", ans:"内容", exp:"見た目「外観」↔ なかみ「内容」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「解決」の対義語は？", ans:"紛争", exp:"おさまる「解決」↔ もめる「紛争」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「開始」の対義語は？", ans:"終了", exp:"はじまる「開始」↔ おわる「終了」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「快諾」の対義語は？", ans:"固辞", exp:"こころよく受ける「快諾」↔ かたく断る「固辞」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「解放」の対義語は？", ans:"束縛", exp:"解き放つ「解放」↔ つなぎ止める「束縛」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「概略」の対義語は？", ans:"詳細", exp:"大体のあらまし「概略」↔ くわしい「詳細」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「画一」の対義語は？", ans:"多様", exp:"揃っている「画一」↔ さまざまな「多様」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「革新」の対義語は？", ans:"保守", exp:"あたらしく改める「革新」↔ 伝統を守る「保守」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「拡大」の対義語は？", ans:"縮小", exp:"ひろげる「拡大」↔ ちぢめる「縮小」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「加入」の対義語は？", ans:"脱退", exp:"はいる「加入」↔ ぬける「脱退」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「華美」の対義語は？", ans:"質素", exp:"派手な「華美」↔ 飾り気のない「質素」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「寡黙」の対義語は？", ans:"多弁", exp:"口数が少ない「寡黙」↔ よく喋る「多弁」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「歓喜」の対義語は？", ans:"悲哀", exp:"よろこぶ「歓喜」↔ かなしむ「悲哀」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「干渉」の対義語は？", ans:"放任", exp:"口出しする「干渉」↔ 自由にさせる「放任」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「乾燥」の対義語は？", ans:"湿潤", exp:"かわいている「乾燥」↔ うるおっている「湿潤」。"},
-            {cat:"ant_all", catName:"対義語:言葉全体", q:"「寛大」の対義語は？", ans:"厳格", exp:"ひろい「寛大」↔ きびしい「厳格」。"}
+            // 対義語：否定の字を含むもの
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「安心(あんしん)」の対義語(たいぎご)は？", ans:"不安(ふあん)", exp:"心が落ち着く「安心」↔ 落ち着かない「不安」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「可能(かのう)」の対義語(たいぎご)は？", ans:"不可能(ふかのう)", exp:"できる「可能」↔ できない「不可能」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「完成(かんせい)」の対義語(たいぎご)は？", ans:"未完(みかん)", exp:"できあがる「完成」↔ まだできていない「未完」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「既知(きち)」の対義語(たいぎご)は？", ans:"未知(みち)", exp:"知っている「既知」↔ まだ知らない「未知」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「好況(こうきょう)」の対義語(たいぎご)は？", ans:"不況(ふきょう)", exp:"景気がよい「好況」↔ 景気が悪い「不況」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「好調(こうちょう)」の対義語(たいぎご)は？", ans:"不調(ふちょう)", exp:"調子がよい「好調」↔ 悪い「不調」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「肯定(こうてい)」の対義語(たいぎご)は？", ans:"否定(ひてい)", exp:"認める「肯定」↔ 打ち消す「否定」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「幸福(こうふく)」の対義語(たいぎご)は？", ans:"不幸(ふこう)", exp:"幸せ「幸福」↔ 幸せでない「不幸」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「必要(ひつよう)」の対義語(たいぎご)は？", ans:"不要(ふよう)", exp:"要る「必要」↔ 要らない「不要」。"},
+            {cat:"ant_neg", catName:"対義語(たいぎご):否定(ひてい)字(じ)", q:"「便利(べんり)」の対義語(たいぎご)は？", ans:"不便(ふべん)", exp:"重宝する「便利」↔ 重宝しない「不便」。"},
+
+            // 対義語：言葉全体が対義のもの
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「有害(ゆうがい)」の対義語(たいぎご)は？", ans:"無害(むがい)", exp:"「有害」↔「無害」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「有効(ゆうこう)」の対義語(たいぎご)は？", ans:"無効(むこう)", exp:"効き目がある「有効」↔ 効き目がない「無効」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「有名(ゆうめい)」の対義語(たいぎご)は？", ans:"無名(むめい)", exp:"名が通っている「有名」↔ 通っていない「無名」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「有利(ゆうり)」の対義語(たいぎご)は？", ans:"不利(ふり)", exp:"条件が良い「有利」↔ 悪い「不利」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「安全(あんぜん)」の対義語(たいぎご)は？", ans:"危険(きけん)", exp:"あぶなくない「安全」↔ あぶない「危険」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「一般(いっぱん)」の対義語(たいぎご)は？", ans:"特殊(とくしゅ)", exp:"広く共通する「一般」↔ 限られた「特殊」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「移動(いどう)」の対義語(たいぎご)は？", ans:"固定(こてい)", exp:"動かす「移動」↔ 固める「固定」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「開始(かいし)」の対義語(たいぎご)は？", ans:"終了(しゅうりょう)", exp:"はじまる「開始」↔ おわる「終了」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「拡大(かくだい)」の対義語(たいぎご)は？", ans:"縮小(しゅくしょう)", exp:"ひろげる「拡大」↔ ちぢめる「縮小」。"},
+            {cat:"ant_all", catName:"対義語(たいぎご):言葉(ことば)全体(ぜんたい)", q:"「乾燥(かんそう)」の対義語(たいぎご)は？", ans:"湿潤(しつじゅん)", exp:"かわいている「乾燥」↔ うるおっている「湿潤」。"}
         ];
 
         // 状態変数
-        let currentQuestions = [];
+        let currentPool = [];
+        let setQuestions = [];
         let currentIdx = 0;
         let correctCount = 0;
         let wrongCount = 0;
-        let answered = false;
-        let lastOptions = [];
+        let selectedPair = [];
+        let isMeaningMode = false;
 
-        // 全選択肢プールを作成（ダミー用）
-        const allAnswersPool = Array.from(new Set(rawDatabase.map(d => d.ans)));
+        const allAnswersPool = Array.from(new Set(rawDatabase.filter(d => d.ans).map(d => d.ans)));
 
-        // 画面切り替え関数
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
@@ -618,15 +527,15 @@
         }
 
         function resetToTitle() {
-            currentQuestions = [];
+            currentPool = [];
+            setQuestions = [];
             currentIdx = 0;
             correctCount = 0;
             wrongCount = 0;
-            lastOptions = [];
+            selectedPair = [];
             switchScreen('screen-title');
         }
 
-        // シャッフル関数
         function shuffle(array) {
             const arr = [...array];
             for (let i = arr.length - 1; i > 0; i--) {
@@ -636,74 +545,83 @@
             return arr;
         }
 
-        // クイズ開始
         function startQuiz(categoryKey) {
-            let filtered = [];
             if (categoryKey === 'all') {
-                filtered = rawDatabase;
+                currentPool = shuffle(rawDatabase);
             } else {
-                filtered = rawDatabase.filter(item => item.cat === categoryKey);
+                currentPool = shuffle(rawDatabase.filter(item => item.cat === categoryKey));
             }
 
-            currentQuestions = shuffle(filtered);
-            currentIdx = 0;
             correctCount = 0;
             wrongCount = 0;
-            lastOptions = [];
+            startNewSet();
+        }
+
+        function startNewSet() {
+            setQuestions = currentPool.slice(0, 10);
+            currentPool = currentPool.slice(10);
+            currentIdx = 0;
 
             switchScreen('screen-quiz');
             loadQuestion();
         }
 
-        // 問題読み込み
         function loadQuestion() {
-            answered = false;
-            const q = currentQuestions[currentIdx];
+            selectedPair = [];
+            const q = setQuestions[currentIdx];
+            isMeaningMode = (q.cat === 'meaning');
 
-            // ヘッダー情報
             document.getElementById('q-cat-name').innerText = q.catName;
-            document.getElementById('q-progress').innerText = `第 ${currentIdx + 1} 問 / ${currentQuestions.length} 問`;
+            document.getElementById('q-progress').innerText = `第(だい) ${currentIdx + 1} 問(もん) / ${setQuestions.length} 問(もん)`;
             document.getElementById('stat-correct').innerText = correctCount;
             document.getElementById('stat-wrong').innerText = wrongCount;
 
-            const totalAnswered = correctCount + wrongCount;
-            const rate = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+            const total = correctCount + wrongCount;
+            const rate = total > 0 ? Math.round((correctCount / total) * 100) : 0;
             document.getElementById('stat-rate').innerText = `${rate}%`;
+            document.getElementById('progress-bar').style.width = `${((currentIdx + 1) / setQuestions.length) * 100}%`;
 
-            document.getElementById('progress-bar').style.width = `${((currentIdx + 1) / currentQuestions.length) * 100}%`;
-
-            // 問題文
-            document.getElementById('q-text').innerText = q.q;
-
-            // 選択肢の生成（連続重複制御付き）
-            let dummies = allAnswersPool.filter(a => a !== q.ans && !lastOptions.includes(a));
-            if (dummies.length < 3) {
-                dummies = allAnswersPool.filter(a => a !== q.ans);
-            }
-            dummies = shuffle(dummies).slice(0, 3);
-
-            let options = shuffle([q.ans, ...dummies]);
-            lastOptions = options;
-
+            const subInst = document.getElementById('sub-instruction');
             const container = document.getElementById('options-container');
             container.innerHTML = '';
-            options.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'btn-option';
-                btn.innerText = `${i + 1}. ${opt}`;
-                btn.onclick = () => checkAnswer(opt, btn, q.ans);
-                container.appendChild(btn);
-            });
+
+            if (isMeaningMode) {
+                subInst.style.display = 'block';
+                document.getElementById('q-text').innerText = `【意味(いみ)】${q.meaning}`;
+
+                // 正解の2つ + ダミー2つ
+                let dummies = shuffle(allAnswersPool.filter(a => !q.pair.includes(a))).slice(0, 2);
+                let options = shuffle([...q.pair, ...dummies]);
+
+                options.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-option';
+                    btn.innerText = opt;
+                    btn.onclick = () => toggleSelectMeaning(opt, btn, q);
+                    container.appendChild(btn);
+                });
+            } else {
+                subInst.style.display = 'none';
+                document.getElementById('q-text').innerText = q.q;
+
+                let dummies = shuffle(allAnswersPool.filter(a => a !== q.ans)).slice(0, 3);
+                let options = shuffle([q.ans, ...dummies]);
+
+                options.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-option';
+                    btn.innerText = opt;
+                    btn.onclick = () => checkNormalAnswer(opt, btn, q.ans);
+                    container.appendChild(btn);
+                });
+            }
 
             document.getElementById('explanation-box').style.display = 'none';
             document.getElementById('btn-next').style.display = 'none';
         }
 
-        // 正誤判定
-        function checkAnswer(selectedOpt, selectedBtn, correctOpt) {
-            if (answered) return;
-            answered = true;
-
+        // 通常問題の回答チェック
+        function checkNormalAnswer(selectedOpt, selectedBtn, correctOpt) {
             const buttons = document.querySelectorAll('.btn-option');
             buttons.forEach(btn => btn.disabled = true);
 
@@ -712,40 +630,88 @@
             if (selectedOpt === correctOpt) {
                 correctCount++;
                 selectedBtn.classList.add('correct');
-                evalResult.innerText = '⭕ 正解！';
+                evalResult.innerText = '⭕ 正解(せいかい)！';
                 evalResult.style.color = '#276749';
             } else {
                 wrongCount++;
                 selectedBtn.classList.add('wrong');
                 buttons.forEach(btn => {
-                    if (btn.innerText.includes(correctOpt)) btn.classList.add('correct');
+                    if (btn.innerText === correctOpt) btn.classList.add('correct');
                 });
-                evalResult.innerText = '❌ 不正解...';
+                evalResult.innerText = '❌ 不正解(ふせいかい)...';
                 evalResult.style.color = '#9b2c2c';
             }
 
-            document.getElementById('stat-correct').innerText = correctCount;
-            document.getElementById('stat-wrong').innerText = wrongCount;
-            const rate = Math.round((correctCount / (correctCount + wrongCount)) * 100);
-            document.getElementById('stat-rate').innerText = `${rate}%`;
-
-            document.getElementById('explanation-text').innerText = currentQuestions[currentIdx].exp;
+            updateStats();
+            document.getElementById('explanation-text').innerText = setQuestions[currentIdx].exp;
             document.getElementById('explanation-box').style.display = 'block';
             document.getElementById('btn-next').style.display = 'inline-block';
         }
 
-        // 次の問題または結果画面
-        function nextQuestion() {
-            currentIdx++;
-            if (currentIdx < currentQuestions.length) {
-                loadQuestion();
+        // 意味問題の回答チェック (2つ選択)
+        function toggleSelectMeaning(opt, btn, q) {
+            if (selectedPair.includes(opt)) {
+                selectedPair = selectedPair.filter(item => item !== opt);
+                btn.classList.remove('selected');
             } else {
-                showResult();
+                if (selectedPair.length < 2) {
+                    selectedPair.push(opt);
+                    btn.classList.add('selected');
+                }
+            }
+
+            if (selectedPair.length === 2) {
+                const buttons = document.querySelectorAll('.btn-option');
+                buttons.forEach(b => b.disabled = true);
+
+                const isCorrect = q.pair.every(val => selectedPair.includes(val));
+                const evalResult = document.getElementById('eval-result');
+
+                if (isCorrect) {
+                    correctCount++;
+                    buttons.forEach(b => {
+                        if (q.pair.includes(b.innerText)) b.classList.add('correct');
+                    });
+                    evalResult.innerText = '⭕ 正解(せいかい)！';
+                    evalResult.style.color = '#276749';
+                } else {
+                    wrongCount++;
+                    buttons.forEach(b => {
+                        if (q.pair.includes(b.innerText)) {
+                            b.classList.add('correct');
+                        } else if (selectedPair.includes(b.innerText)) {
+                            b.classList.add('wrong');
+                        }
+                    });
+                    evalResult.innerText = '❌ 不正解(ふせいかい)...';
+                    evalResult.style.color = '#9b2c2c';
+                }
+
+                updateStats();
+                document.getElementById('explanation-text').innerText = q.exp;
+                document.getElementById('explanation-box').style.display = 'block';
+                document.getElementById('btn-next').style.display = 'inline-block';
             }
         }
 
-        // 結果画面表示
-        function showResult() {
+        function updateStats() {
+            document.getElementById('stat-correct').innerText = correctCount;
+            document.getElementById('stat-wrong').innerText = wrongCount;
+            const total = correctCount + wrongCount;
+            const rate = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('stat-rate').innerText = `${rate}%`;
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < setQuestions.length) {
+                loadQuestion();
+            } else {
+                showSetResult();
+            }
+        }
+
+        function showSetResult() {
             switchScreen('screen-result');
             const total = correctCount + wrongCount;
             const rate = total > 0 ? Math.round((correctCount / total) * 100) : 0;
@@ -753,6 +719,23 @@
             document.getElementById('res-correct').innerText = correctCount;
             document.getElementById('res-wrong').innerText = wrongCount;
             document.getElementById('res-rate').innerText = `${rate}%`;
+
+            const btnContinue = document.getElementById('btn-continue');
+            const clearMsg = document.getElementById('clear-message');
+
+            if (currentPool.length > 0) {
+                document.getElementById('res-title').innerText = "10問(もん)セットクリア！";
+                btnContinue.style.display = 'inline-block';
+                clearMsg.style.display = 'none';
+            } else {
+                document.getElementById('res-title').innerText = "全問(ぜんもん)クリア！";
+                btnContinue.style.display = 'none';
+                clearMsg.style.display = 'block';
+            }
+        }
+
+        function continueNextSet() {
+            startNewSet();
         }
     </script>
 </body>
