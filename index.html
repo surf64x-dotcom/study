@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         body {
             background-color: #f0f4f8;
@@ -22,12 +23,13 @@
         }
         .container {
             background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             width: 100%;
             max-width: 650px;
             padding: 24px;
             position: relative;
+            overflow: hidden;
         }
         .btn-quit {
             position: absolute;
@@ -41,16 +43,25 @@
             font-size: 0.85rem;
             cursor: pointer;
             font-weight: bold;
+            transition: transform 0.1s ease, background 0.2s ease;
         }
-        .btn-quit:hover {
-            background-color: #c53030;
+        .btn-quit:active {
+            transform: scale(0.95);
         }
+
+        /* 画面切り替えアニメーション（高速フェードイン＆スライド） */
         .screen {
             display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.22s cubic-bezier(0, 0, 0.2, 1), transform 0.22s cubic-bezier(0, 0, 0.2, 1);
         }
         .screen.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
+
         /* タイトル画面 */
         .title-screen {
             text-align: center;
@@ -71,16 +82,18 @@
             background-color: #3182ce;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 16px 40px;
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+            transition: transform 0.12s ease, background 0.2s ease;
         }
-        .btn-start:hover {
-            background-color: #2b6cb0;
+        .btn-start:active {
+            transform: scale(0.96);
         }
+
         /* カテゴリー選択画面 */
         .category-title {
             font-size: 1.2rem;
@@ -97,8 +110,8 @@
         .btn-cat {
             background-color: #f7fafc;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 12px 16px;
+            border-radius: 10px;
+            padding: 14px 16px;
             font-size: 0.95rem;
             text-align: left;
             cursor: pointer;
@@ -107,10 +120,14 @@
             align-items: center;
             font-weight: bold;
             color: #2d3748;
+            transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
         }
         .btn-cat:hover {
             background-color: #ebf8ff;
             border-color: #63b3ed;
+        }
+        .btn-cat:active {
+            transform: scale(0.98);
         }
         .cat-count {
             font-size: 0.8rem;
@@ -119,6 +136,7 @@
             padding: 4px 8px;
             border-radius: 4px;
         }
+
         /* クイズ画面 */
         .header {
             border-bottom: 2px solid #eef2f5;
@@ -145,7 +163,7 @@
             background-color: #3182ce;
             height: 100%;
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.3s ease-out;
         }
         .status {
             display: flex;
@@ -177,40 +195,73 @@
         .btn-option {
             background-color: #f7fafc;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 12px 16px;
             font-size: 0.95rem;
             text-align: left;
             cursor: pointer;
             color: #2d3748;
+            transition: transform 0.12s ease, border-color 0.2s ease, background 0.2s ease;
         }
         .btn-option:hover:not(:disabled) {
             background-color: #ebf8ff;
             border-color: #63b3ed;
         }
+        .btn-option:active:not(:disabled) {
+            transform: scale(0.98);
+        }
         .btn-option.selected {
             border-color: #3182ce;
             background-color: #ebf8ff;
         }
+
+        /* アニメーション：正解時（ぽんと弾む） */
         .btn-option.correct {
-            background-color: #c6f6d5;
-            border-color: #38a169;
-            color: #22543d;
+            background-color: #c6f6d5 !important;
+            border-color: #38a169 !important;
+            color: #22543d !important;
             font-weight: bold;
+            animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
+
+        /* アニメーション：不正解時（横揺れ） */
         .btn-option.wrong {
-            background-color: #fed7d7;
-            border-color: #e53e3e;
-            color: #742a2a;
+            background-color: #fed7d7 !important;
+            border-color: #e53e3e !important;
+            color: #742a2a !important;
+            animation: shake 0.25s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
         }
+
+        @keyframes popIn {
+            0% { transform: scale(0.98); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        /* 解説ボックス（下から滑らかに出現） */
         .explanation-box {
             margin-top: 16px;
             padding: 14px;
-            border-radius: 8px;
+            border-radius: 10px;
             background-color: #f7fafc;
             border-left: 4px solid #3182ce;
             display: none;
+            animation: slideUp 0.2s ease-out forwards;
         }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .explanation-title {
             font-weight: bold;
             font-size: 0.9rem;
@@ -230,14 +281,20 @@
             background-color: #3182ce;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             padding: 10px 20px;
             font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
             display: none;
+            box-shadow: 0 3px 8px rgba(49, 130, 206, 0.3);
+            transition: transform 0.12s ease;
         }
-        /* 結果・区切り画面 */
+        .btn-next:active {
+            transform: scale(0.96);
+        }
+
+        /* 結果画面 */
         .result-box {
             text-align: center;
             padding: 20px 0;
@@ -252,12 +309,13 @@
             background-color: #feebc8;
             color: #742a2a;
             border: 2px solid #fbd38d;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 16px;
             margin-bottom: 20px;
             font-size: 1.1rem;
             font-weight: bold;
             line-height: 1.5;
+            animation: popIn 0.3s ease-out forwards;
         }
         .stats-grid {
             display: grid;
@@ -267,7 +325,7 @@
         }
         .stat-card {
             background-color: #f7fafc;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 12px;
             border: 1px solid #e2e8f0;
         }
@@ -295,6 +353,11 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            box-shadow: 0 3px 8px rgba(56, 161, 105, 0.3);
+            transition: transform 0.12s ease;
+        }
+        .btn-restart:active {
+            transform: scale(0.96);
         }
         .btn-secondary {
             background-color: #718096;
@@ -305,6 +368,10 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
+            transition: transform 0.12s ease;
+        }
+        .btn-secondary:active {
+            transform: scale(0.96);
         }
     </style>
 </head>
@@ -346,7 +413,7 @@
                 </button>
                 <button class="btn-cat" onclick="startQuiz('ant_neg')">
                     <span>【対義語】否定の字を含むもの</span>
-                    <span class="cat-count">10问</span>
+                    <span class="cat-count">10問</span>
                 </button>
                 <button class="btn-cat" onclick="startQuiz('ant_all')">
                     <span>【対義語】言葉全体が対義のもの</span>
@@ -413,9 +480,7 @@
     </div>
 
     <script>
-        // データベース（出題単語・正解・ダミーすべてにふりがな付記）
         const rawDatabase = [
-            // 意味から2つ選ぶカテゴリー
             {cat:"meaning", catName:"類義語:意味選択", meaning:"深く考えず簡単に行う様子", pair:["安易(あんい)", "安直(あんちょく)"], exp:"「安易」と「安直」はどちらも簡単に行う様子を表す類義語です。"},
             {cat:"meaning", catName:"類義語:意味選択", meaning:"詳しいこと・細かな内容", pair:["委細(いさい)", "詳細(しょうさい)"], exp:"「委細」と「詳細」は詳しい事柄を表す類義語です。"},
             {cat:"meaning", catName:"類義語:意味選択", meaning:"元気がよく生き生きとしている様子", pair:["快活(かいかつ)", "活発(かっぱつ)"], exp:"「快活」と「活発」は生き生きした様子を表す類義語です。"},
@@ -432,7 +497,6 @@
             {cat:"meaning", catName:"類義語:意味選択", meaning:"狙ったところにぴったり当たること", pair:["命中(めいちゅう)", "的中(てきちゅう)"], exp:"「命中」と「的中」は当たることを指します。"},
             {cat:"meaning", catName:"類義語:意味選択", meaning:"病人や怪我人の世話をすること", pair:["介抱(かいほう)", "看病(かんびょう)"], exp:"「介抱」と「看病」は世話をすることを表します。"},
 
-            // 類義語：共通の字を含むもの
             {cat:"syn_same", catName:"類義語:共通字", word:"安易(あんい)", ans:"安直(あんちょく)", exp:"「安易」と「安直」はどちらも簡単に済ませる様子。"},
             {cat:"syn_same", catName:"類義語:共通字", word:"家外(かがい)", ans:"意外(いがい)", exp:"「家外」と「意外」は思いのほかであることを指す。"},
             {cat:"syn_same", catName:"類義語:共通字", word:"以後(いご)", ans:"以降(いこう)", exp:"「以後」と「以降」はそれより後ろの時間を指す。"},
@@ -454,7 +518,6 @@
             {cat:"syn_same", catName:"類義語:共通字", word:"休憩(きゅうけい)", ans:"休息(きゅうそく)", exp:"「休憩」と「休息」は体を休めること。"},
             {cat:"syn_same", catName:"類義語:共通字", word:"経験(けいけん)", ans:"体験(たいけん)", exp:"「経験」と「体験」は実際にやってみること。"},
 
-            // 類義語：全体として類義のもの
             {cat:"syn_all", catName:"類義語:全体類義", word:"安全(あんぜん)", ans:"無事(ぶじ)", exp:"「安全」と「無事」は危なくないこと。"},
             {cat:"syn_all", catName:"類義語:全体類義", word:"案内(あんない)", ans:"誘導(ゆうどう)", exp:"「案内」と「誘導」は導いて教えること。"},
             {cat:"syn_all", catName:"類義語:全体類義", word:"遺憾(いかん)", ans:"残念(ざんねん)", exp:"「遺憾」と「残念」は心残りであること。"},
@@ -466,7 +529,6 @@
             {cat:"syn_all", catName:"類義語:全体類義", word:"命中(めいちゅう)", ans:"的中(てきちゅう)", exp:"「命中」と「的中」はぴったり当たること。"},
             {cat:"syn_all", catName:"類義語:全体類義", word:"目的(もくてき)", ans:"目標(もくひょう)", exp:"「目的」と「目標」は目指すもの。"},
 
-            // 対義語：共通の字を含むもの
             {cat:"ant_same", catName:"対義語:共通字", word:"着陸(ちゃくりく)", ans:"離陸(りりく)", exp:"陸につく「着陸」↔ 陸を離れる「離陸」。"},
             {cat:"ant_same", catName:"対義語:共通字", word:"長所(ちょうしょ)", ans:"短所(たんしょ)", exp:"よい所の「長所」↔ 悪い所の「短所」。"},
             {cat:"ant_same", catName:"対義語:共通字", word:"直接(ちょくせつ)", ans:"間接(かんせつ)", exp:"間に挟まない「直接」↔ 間を置く「間接」。"},
@@ -478,7 +540,6 @@
             {cat:"ant_same", catName:"対義語:共通字", word:"敏感(びんかん)", ans:"鈍感(どんかん)", exp:"感度が鋭い「敏感」↔ 鈍い「鈍感」。"},
             {cat:"ant_same", catName:"対義語:共通字", word:"復習(ふくしゅう)", ans:"予習(よしゅう)", exp:"習った後復習 ↔ あらかじめ習う「予習」。"},
 
-            // 対義語：否定の字を含むもの
             {cat:"ant_neg", catName:"対義語:否定字", word:"安心(あんしん)", ans:"不安(ふあん)", exp:"心が落ち着く「安心」↔ 落ち着かない「不安」。"},
             {cat:"ant_neg", catName:"対義語:否定字", word:"可能(かのう)", ans:"不可能(ふかのう)", exp:"できる「可能」↔ できない「不可能」。"},
             {cat:"ant_neg", catName:"対義語:否定字", word:"完成(かんせい)", ans:"未完(みかん)", exp:"できあがる「完成」↔ まだできていない「未完」。"},
@@ -490,7 +551,6 @@
             {cat:"ant_neg", catName:"対義語:否定字", word:"必要(ひつよう)", ans:"不要(ふよう)", exp:"要る「必要」↔ 要らない「不要」。"},
             {cat:"ant_neg", catName:"対義語:否定字", word:"便利(べんり)", ans:"不便(ふべん)", exp:"重宝する「便利」↔ 重宝しない「不便」。"},
 
-            // 対義語：言葉全体が対義のもの
             {cat:"ant_all", catName:"対義語:言葉全体", word:"有害(ゆうがい)", ans:"無害(むがい)", exp:"「有害」↔「無害」。"},
             {cat:"ant_all", catName:"対義語:言葉全体", word:"有効(ゆうこう)", ans:"無効(むこう)", exp:"効き目がある「有効」↔ 効き目がない「無効」。"},
             {cat:"ant_all", catName:"対義語:言葉全体", word:"有名(ゆうめい)", ans:"無名(むめい)", exp:"名が通っている「有名」↔ 通っていない「無名」。"},
@@ -503,7 +563,6 @@
             {cat:"ant_all", catName:"対義語:言葉全体", word:"乾燥(かんそう)", ans:"湿潤(しつじゅん)", exp:"かわいている「乾燥」↔ うるおっている「湿潤」。"}
         ];
 
-        // 状態変数
         let currentPool = [];
         let setQuestions = [];
         let currentIdx = 0;
@@ -515,11 +574,17 @@
         const allAnswersPool = Array.from(new Set(rawDatabase.filter(d => d.ans).map(d => d.ans)));
 
         function switchScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            const currentActive = document.querySelector('.screen.active');
+            if (currentActive) {
+                currentActive.classList.remove('active');
+            }
+            setTimeout(() => {
+                const target = document.getElementById(screenId);
+                target.classList.add('active');
 
-            const btnQuit = document.getElementById('btn-quit');
-            btnQuit.style.display = (screenId === 'screen-quiz' || screenId === 'screen-result') ? 'block' : 'none';
+                const btnQuit = document.getElementById('btn-quit');
+                btnQuit.style.display = (screenId === 'screen-quiz' || screenId === 'screen-result') ? 'block' : 'none';
+            }, 50);
         }
 
         function showCategoryScreen() {
