@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中学国語 類義語・対義語マスター 100問</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            background-color: #f0f4f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 650px;
+            padding: 24px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #eef2f5;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .progress-bar-container {
+            background-color: #e2e8f0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .progress-bar {
+            background-color: #3182ce;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .status {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 8px;
+        }
+        .question-box {
+            margin-bottom: 24px;
+        }
+        .question-num {
+            font-size: 0.95rem;
+            color: #3182ce;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        .question-text {
+            font-size: 1.15rem;
+            color: #1a202c;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-option {
+            background-color: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #2d3748;
+        }
+        .btn-option:hover:not(:disabled) {
+            background-color: #ebf8ff;
+            border-color: #63b3ed;
+        }
+        .btn-option:disabled {
+            cursor: default;
+        }
+        .btn-option.correct {
+            background-color: #c6f6d5;
+            border-color: #38a169;
+            color: #22543d;
+            font-weight: bold;
+        }
+        .btn-option.wrong {
+            background-color: #fed7d7;
+            border-color: #e53e3e;
+            color: #742a2a;
+        }
+        .explanation-box {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            background-color: #f7fafc;
+            border-left: 4px solid #3182ce;
+            display: none;
+        }
+        .explanation-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #2b6cb0;
+            margin-bottom: 4px;
+        }
+        .explanation-text {
+            font-size: 0.95rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .btn-next {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            transition: background 0.2s;
+        }
+        .btn-next:hover {
+            background-color: #2b6cb0;
+        }
+        .result-box {
+            text-align: center;
+            padding: 20px 0;
+            display: none;
+        }
+        .result-title {
+            font-size: 1.6rem;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+        .score-display {
+            font-size: 2.2rem;
+            color: #3182ce;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+        .comment {
+            font-size: 1.05rem;
+            color: #4a5568;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .btn-restart {
+            background-color: #38a169;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-restart:hover {
+            background-color: #2f855a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">中学校国語 類義語・対義語100問</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="status">
+                <span id="question-count">第 1 問 / 100 問</span>
+                <span id="score-count">正解数: 0</span>
+            </div>
+        </div>
+
+        <div id="quiz-screen">
+            <div class="question-box">
+                <div class="question-num" id="q-category">問題</div>
+                <div class="question-text" id="q-text">問題文がここに入ります</div>
+            </div>
+
+            <div class="options" id="options-container">
+                <!-- 選択肢がここに動的生成されます -->
+            </div>
+
+            <div class="explanation-box" id="explanation-box">
+                <div class="explanation-title" id="eval-result">解説</div>
+                <div class="explanation-text" id="explanation-text">解説文が入ります</div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-next" id="btn-next" onclick="nextQuestion()">次の問題へ</button>
+            </div>
+        </div>
+
+        <div class="result-box" id="result-screen">
+            <div class="result-title">テスト終了！</div>
+            <div class="score-display" id="final-score">0 / 100点</div>
+            <div class="comment" id="result-comment">お疲れ様でした！</div>
+            <button class="btn-restart" onclick="restartQuiz()">もう一度挑戦する</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [{"q": "「安易」の類義語として最も適切なものを選びなさい。", "options": ["安直", "意外", "詳細", "寛容"], "ans": 0, "exp": "「安易」と「安直」はどちらも「深く考えず簡単に行う様子」を意味する類義語です。"}, {"q": "「委細」の類義語として最も適切なものを選びなさい。", "options": ["中心", "詳細", "妙案", "性質"], "ans": 1, "exp": "「委細」と「詳細」はどちらも「詳しいこと・こまかい内容」を表します。"}, {"q": "「快活」の類義語として最も適切なものを選びなさい。", "options": ["活発", "改良", "推測", "追想"], "ans": 0, "exp": "「快活」と「活発」は元気がよく生き生きとしている様子を表す類義語です。"}, {"q": "「核心」の類義語として最も適切なものを選びなさい。", "options": ["中心", "慣例", "肝要", "希望"], "ans": 0, "exp": "「核心」と「中心」は物事の最も大切な中心部分を表します。"}, {"q": "「肝心」の類義語として最も適切なものを選びなさい。", "options": ["肝要", "寛容", "計画", "気質"], "ans": 0, "exp": "「肝心」と「肝要」はどちらも非常に重要であることを意味します。"}, {"q": "「願望」の類義語として最も適切なものを選びなさい。", "options": ["希望", "帰省", "標準", "機転"], "ans": 0, "exp": "「願望」と「希望」は強く望むことを表す類義語です。"}, {"q": "「経験」の類義語として最も適切なものを選びなさい。", "options": ["体験", "策略", "履歴", "婚姻"], "ans": 0, "exp": "「経験」と「体験」は実際に自分で行って得た知識や技術を意味します。"}, {"q": "「計略」の類義語として最も適切なものを選びなさい。", "options": ["策略", "名作", "限度", "着実"], "ans": 0, "exp": "「計略」と「策略」ははかりごと・企みを意味する類義語です。"}, {"q": "「傑作」の類義語として最も適切なものを選びなさい。", "options": ["名作", "節約", "材料", "順調"], "ans": 0, "exp": "「傑作」と「名作」は非常に優れた作品を意味します。"}, {"q": "「倹約」の類義語として最も適切なものを選びなさい。", "options": ["節約", "効用", "配慮", "祖国"], "ans": 0, "exp": "「倹約」と「節約」は無駄遣いを省くことを意味します。"}, {"q": "「原料」の類義語として最も適切なものを選びなさい。", "options": ["材料", "才媛", "方策", "辞任"], "ans": 0, "exp": "「原料」と「材料」は製品を作るもとになるものを指します。"}, {"q": "「考慮」の類義語として最も適切なものを選びなさい。", "options": ["配慮", "着任", "天然", "妙案"], "ans": 0, "exp": "「考慮」と「配慮」は心を配りよく考えることを表します。"}, {"q": "「故国」の類義語として最も適切なものを選びなさい。", "options": ["祖国", "是認", "未来", "所有"], "ans": 0, "exp": "「故国」と「祖国」は自分の生まれ育った国を指します。"}, {"q": "「名案」の類義語として最も適切なものを選びなさい。", "options": ["妙案", "独立", "信頼", "圧倒"], "ans": 0, "exp": "「名案」と「妙案」はすぐれた考え・アイディアを意味します。"}, {"q": "「承認」の類義語として最も適切なものを選びなさい。", "options": ["是認", "休養", "施設", "専念"], "ans": 0, "exp": "「承認」と「是認」は良いと認めることを表します。"}, {"q": "「自立」の類義語として最も適切なものを選びなさい。", "options": ["独立", "対比", "預金", "有名"], "ans": 0, "exp": "「自立」と「独立」は他に頼らず自分の力で立ち立つことを意味します。"}, {"q": "「信用」の類義語として最も適切なものを選びなさい。", "options": ["信頼", "挙動", "破産", "統一"], "ans": 0, "exp": "「信用」と「信頼」は信じて頼りにすることを意味します。"}, {"q": "「静養」の類義語として最も適切なものを選びなさい。", "options": ["休養", "本人", "進展", "平素"], "ans": 0, "exp": "「静養」と「休養」は身体を休めて健康を回復することです。"}, {"q": "「設備」の類義語として最も適切なものを選びなさい。", "options": ["施設", "的中", "目標", "要点"], "ans": 0, "exp": "「設備」と「施設」は必要な備えや建物のことを意味します。"}, {"q": "「著名」の類義語として最も適切なものを選びなさい。", "options": ["有名", "追憶", "干渉", "看病"], "ans": 0, "exp": "「著名」と「有名」は世間に広く知られていることを意味します。"}, {"q": "「安全」の類義語として最も適切なものを選びなさい。", "options": ["無事", "大意", "値段", "虚構"], "ans": 0, "exp": "「安全」と「無事」は危険や過ちがなく平穏であることを意味します。"}, {"q": "「案内」の類義語として最も適切なものを選びなさい。", "options": ["誘導", "決心", "援助", "是非"], "ans": 0, "exp": "「案内」と「誘導」は人を導いて教えることを意味します。"}, {"q": "「遺憾」の類義語として最も適切なものを選びなさい。", "options": ["残念", "忍耐", "無口", "出版"], "ans": 0, "exp": "「遺憾」と「残念」は思い通りにならず心残りであることを表します。"}, {"q": "「腕前」の類義語として最も適切なものを選びなさい。", "options": ["技能", "見物", "興味", "嘆賞"], "ans": 0, "exp": "「腕前」と「技能」は技量や腕の冴えを意味します。"}, {"q": "「運搬」の類義語として最も適切なものを選びなさい。", "options": ["輸送", "容易", "役人", "組織"], "ans": 0, "exp": "「運搬」と「輸送」は物を運ぶことを意味します。"}, {"q": "「会得」の類義語として最も適切なものを選びなさい。", "options": ["理解", "重体", "貢献", "難局"], "ans": 0, "exp": "「会得」と「理解」は物事の意味や技術をよく分かって自分のものにすることです。"}, {"q": "「倒産」の類義語として最も適切なものを選びなさい。", "options": ["破産", "円満", "詳細", "抽象"], "ans": 0, "exp": "「倒産」と「破産」は事業の継続が不可能になり財産を失うことを意味します。"}, {"q": "「統制」の類義語として最も適切なものを選びなさい。", "options": ["統一", "具体", "進歩", "達成"], "ans": 0, "exp": "「統制」と「統一」は一つにまとめて整えることを表します。"}, {"q": "「命中」の類義語として最も適切なものを選びなさい。", "options": ["的中", "沈着", "模範", "倫理"], "ans": 0, "exp": "「命中」と「的中」は狙ったところにぴったり当たることです。"}, {"q": "「目的」の類義語として最も適切なものを選びなさい。", "options": ["目標", "不意", "秘密", "了解"], "ans": 0, "exp": "「目的」と「目標」は目指す事柄や地点を指します。"}, {"q": "「介抱」の類義語として最も適切なものを選びなさい。", "options": ["看病", "役者", "冷淡", "面倒"], "ans": 0, "exp": "「介抱」と「看病」は病人や怪我人の世話をすることです。"}, {"q": "「概要」の類義語として最も適切なものを選びなさい。", "options": ["大意", "海抜", "放浪", "推移"], "ans": 0, "exp": "「概要」と「大意」は全体のあらすじや大体の内容を意味します。"}, {"q": "「価格」の類義語として最も適切なものを選びなさい。", "options": ["値段", "来歴", "不在", "本屋"], "ans": 0, "exp": "「価格」と「値段」は品物の値段・代金を意味します。"}, {"q": "「架空」の類義語として最も適切なものを選びなさい。", "options": ["虚構", "作法", "向上", "成就"], "ans": 0, "exp": "「架空」と「虚構」は実際には存在しない作り事であることを意味します。"}, {"q": "「覚悟」の類義語として最も適切なものを選びなさい。", "options": ["決心", "美点", "便利", "冷静"], "ans": 0, "exp": "「覚悟」と「決心」は心構えを固めることです。"}, {"q": "「加勢」の類義語として最も適切なものを選びなさい。", "options": ["援助", "模範", "倫理", "不意"], "ans": 0, "exp": "「加勢」と「援助」は力を貸して助けることです。"}, {"q": "「我慢」の類義語として最も適切なものを選びなさい。", "options": ["忍耐", "秘密", "了解", "役者"], "ans": 0, "exp": "「我慢」と「忍耐」は辛いことや欲求を耐え忍ぶことです。"}, {"q": "「寡黙」の類義語として最も適切なものを選びなさい。", "options": ["無口", "冷淡", "面倒", "海抜"], "ans": 0, "exp": "「寡黙」と「無口」は口数が少ない様子を表します。"}, {"q": "「観光」の類義語として最も適切なものを選びなさい。", "options": ["見物", "放浪", "推移", "来歴"], "ans": 0, "exp": "「観光」と「見物」は名所などを見て回ることです。"}, {"q": "「簡単」の類義語として最も適切なものを選びなさい。", "options": ["容易", "不在", "本屋", "作法"], "ans": 0, "exp": "「簡単」と「容易」は易しくたやすいことを表します。"}, {"q": "「屈強」の対義語として最も適切なものを選びなさい。", "options": ["虚弱", "頑丈", "膨張", "複雑"], "ans": 0, "exp": "「屈強（頑丈で強い）」の対義語は身体が弱い「虚弱」です。"}, {"q": "「長所」の対義語として最も適切なものを選びなさい。", "options": ["短所", "美点", "便利", "特長"], "ans": 0, "exp": "「長所（よいところ）」の対義語は「短所（悪いところ）」です。"}, {"q": "「沈着」の対義語として最も適切なものを選びなさい。", "options": ["狼狽", "冷静", "沈黙", "安定"], "ans": 0, "exp": "「沈着（落ち着いている）」の対義語は慌てふためく「狼狽（ろうばい）」です。"}, {"q": "「原因」の対義語として最も適切なものを選びなさい。", "options": ["結果", "動機", "過程", "理由"], "ans": 0, "exp": "「原因」によって生じた事態が「結果」です。"}, {"q": "「拡大」の対義語として最も適切なものを選びなさい。", "options": ["縮小", "膨張", "広大", "増加"], "ans": 0, "exp": "「拡大（広げる）」の対義語は「縮小（小さくする）」です。"}, {"q": "「過熱」の対義語として最も適切なものを選びなさい。", "options": ["冷却", "温熱", "加熱", "放熱"], "ans": 0, "exp": "「過熱（熱くなりすぎる）」の対義語は冷やす「冷却」です。"}, {"q": "「需要」の対義語として最も適切なものを選びなさい。", "options": ["供給", "消費", "購入", "要求"], "ans": 0, "exp": "「需要（求めること）」と「供給（満たすために与えること）」は対義語です。"}, {"q": "「獲得」の対義語として最も適切なものを選びなさい。", "options": ["喪失", "入手", "取得", "維持"], "ans": 0, "exp": "「獲得（手に入れる）」の対義語は「喪失（失う）」です。"}, {"q": "「加入」の対義語として最も適切なものを選びなさい。", "options": ["脱退", "参加", "登録", "入会"], "ans": 0, "exp": "「加入（仲間や組織に入る）」の対義語は「脱退（抜ける）」です。"}, {"q": "「華美」の対義語として最も適切なものを選びなさい。", "options": ["質素", "派手", "豪華", "美麗"], "ans": 0, "exp": "「華美（派手で華やか）」の対義語は飾り気がない「質素」です。"}, {"q": "「乾燥」の対義語として最も適切なものを選びなさい。", "options": ["湿潤", "高湿", "除湿", "脱水"], "ans": 0, "exp": "「乾燥（乾いている）」の対義語は「湿潤（潤っている）」です。"}, {"q": "「寛大」の対義語として最も適切なものを選びなさい。", "options": ["厳格", "寛容", "温厚", "親切"], "ans": 0, "exp": "「寛大（心が広く咎めない）」の対義語は「厳格（厳しい）」です。"}, {"q": "「楽観」の対義語として最も適切なものを選びなさい。", "options": ["悲観", "主観", "客観", "静観"], "ans": 0, "exp": "「楽観（よくなると思う）」の対義語は悪くなると捉える「悲観」です。"}, {"q": "「開始」の対義語として最も適切なものを選びなさい。", "options": ["終了", "着手", "開会", "進行"], "ans": 0, "exp": "「開始（はじめる）」の対義語は「終了（おわる）」です。"}, {"q": "「一般」の対義語として最も適切なものを選びなさい。", "options": ["特殊", "普遍", "全般", "共通"], "ans": 0, "exp": "「一般（広く共通する）」の対義語は限られた特別な「特殊」です。"}, {"q": "「過小」の対義語として最も適切なものを選びなさい。", "options": ["過大", "巨大", "膨大", "膨張"], "ans": 0, "exp": "「過小（小さすぎる）」の対義語は「過大（大きすぎる）」です。"}, {"q": "「偶然」の対義語として最も適切なものを選びなさい。", "options": ["必然", "突発", "自然", "意外"], "ans": 0, "exp": "「偶然（思いがけず）」の対義語は必ずそうなる「必然」です。"}, {"q": "「顕在」の対義語として最も適切なものを選びなさい。", "options": ["潜在", "表出", "明白", "存在"], "ans": 0, "exp": "「顕在（表に現れる）」の対義語は内に隠れている「潜在」です。"}, {"q": "「主観」の対義語として最も適切なものを選びなさい。", "options": ["客観", "悲観", "楽観", "直感"], "ans": 0, "exp": "「主観（自分だけの見方）」の対義語は第三者的な「客観」です。"}, {"q": "「進歩」の対義語として最も適切なものを選びなさい。", "options": ["退歩", "向上", "発展", "進化"], "ans": 0, "exp": "「進歩（よくなる）」の対義語は後退する「退歩（または退化）」です。"}, {"q": "「窓を（　）」「傘を（　）」の空欄において、「あける」「ひらく」の使い分けとして正しい組み合わせを選びなさい。", "options": ["窓：両方可 / 傘：ひらくのみ", "窓：あけるのみ / 傘：両方可", "窓：ひらくのみ / 傘：あけるのみ", "窓：両方不可 / 傘：両方可"], "ans": 0, "exp": "「窓」は空間を作る・解放する両方の意味があるため「あける/ひらく」両方可能ですが、「傘」は「広げる」の意味なので「ひらく」のみ使えます。"}, {"q": "「あがる」と「のぼる」の違いについて、正しい説明を選びなさい。", "options": ["あがる：移動した結果を強調 / のぼる：移動する行為を強調", "あがる：移動する行為を強調 / のぼる：移動した結果を強調", "あがる：低い所へ移動 / のぼる：高い所へ移動", "両者にニュアンスの違いは全く存在しない"], "ans": 0, "exp": "「坂をあがった（結果）」、「階段をのぼっている（行為）」のように強調点に違いがあります。"}, {"q": "「つかむ」と「にぎる」の違いについて、正しい説明を選びなさい。", "options": ["つかむ：手の指を曲げて持つ / にぎる：つかんでさらに指に力を入れる", "つかむ：両手で持つ / にぎる：片手で持つ", "つかむ：強い力で握りつぶす / にぎる：優しく触れる", "つかむ：足で掴む / にぎる：手で持つ"], "ans": 0, "exp": "「つかむ」は対象を指で捉える動作で、「にぎる」はそこからさらに握りこぶしのように力を入れる動作です。"}, {"q": "文脈問題：「甘い言葉にだまされた」における「甘い」の意味として最も適切なものを選びなさい。", "options": ["人の心をひきつけて迷わせるような", "砂糖などの糖分の味がする", "厳しさが足りず生ぬるい", "不備があって締まりがない"], "ans": 0, "exp": "「甘い言葉」は誘惑するような・心惑わす言葉を意味します。"}, {"q": "文脈問題：「ねじが甘い」における「甘い」の意味として最も適切なものを選びなさい。", "options": ["締まりがゆるく不備がある", "糖分が含まれている", "人に優しい態度である", "誘惑的である"], "ans": 0, "exp": "「ねじや固定が甘い」は締め付けが緩いことを指します。"}, {"q": "文脈問題：「時計のバンドがゆるい」における「ゆるい」の意味として最も適切なものを選びなさい。", "options": ["すき間やゆとりがある", "角度や傾斜が小さい", "緊張感がなくゆったりしている", "液体が固まっていない"], "ans": 0, "exp": "サイズが大きく隙間がある様子を表します。"}, {"q": "文脈問題：「ゆるい斜面」における「ゆるい」の意味として最も適切なものを選びなさい。", "options": ["傾斜（角度）が小さい", "締め付けが弱い", "会話の雰囲気が穏やかである", "長さが短い"], "ans": 0, "exp": "坂や階段などの傾斜が急でないことを「ゆるい」と言います。"}, {"q": "文脈問題：「噂が流れる」における「流れる」の意味として最も適切なものを選びなさい。", "options": ["情報や音声が周囲に伝わる", "液体が低きに移動する", "予定・計画が取りやめになる", "悪しき方向に傾く"], "ans": 0, "exp": "「噂・情報・音楽」などが伝わる・聞こえることを意味します。"}, {"q": "文脈問題：「旅行の計画が流れる」における「流れる」の意味として最も適切なものを選びなさい。", "options": ["計画が中止・不成立になる", "情報が水に流される", "順調に進行する", "遠くへ移動する"], "ans": 0, "exp": "取り決めた行事や計画が無効・中止になることを指します。"}, {"q": "文脈問題：「仮面を取る」における「取る」の意味として最も適切なものを選びなさい。", "options": ["身に着けているものを外す", "手に持って所有する", "チケットを予約購入する", "相撲などの勝負を行う"], "ans": 0, "exp": "帽子や仮面、眼鏡などを身体から外すことを「取る」と言います。"}, {"q": "次のうち、「高い」の対義語が「低い」となる文を選びなさい。", "options": ["高い山に登る。", "高い買い物をする。", "高い技術力を評価される。", "名声が高い。"], "ans": 0, "exp": "「山の高さ（位置・標高）」に対する対義語は「低い山」です。値段の場合は「安い」になります。"}, {"q": "次のうち、「高い」の対義語が「安い」となる文を選びなさい。", "options": ["高い洋服を買う。", "高い建物が見える。", "高い志を持つ。", "高い声で叫ぶ。"], "ans": 0, "exp": "価格を表す「高い」の対義語は「安い」です。"}, {"q": "「足をのばす」の「のばす」の意味として最も適切なものを選びなさい。", "options": ["予定より遠くの場所まで行く", "アイロンでシワを消す", "締め切り期日を遅らせる", "才能を発揮させる"], "ans": 0, "exp": "「ついでに別の遠い場所まで行く」ことを「足をのばす」と言います。"}, {"q": "「気を揉む」の意味として最も適切なものを選びなさい。", "options": ["心配して落ち着かない", "マッサージをしてほぐす", "怒りで興奮する", "気合いを入れる"], "ans": 0, "exp": "心配事があってハラハラ・やきもきすることを指します。"}, {"q": "「腹を割る」の意味として最も適切なものを選びなさい。", "options": ["本心を包み隠さず打ち明ける", "手術を受ける", "大声で笑う", "決心して覚悟を決める"], "ans": 0, "exp": "本音・本当の気持ちを隠さずに話すことです。"}, {"q": "「手を広げる」の意味として最も適切なものを選びなさい。", "options": ["事業や活動の範囲を拡大する", "ストレッチをする", "降参して降伏する", "おねだりをする"], "ans": 0, "exp": "「事業や仕事の規模・関係分野を拡大する」という意味で用いられます。"}, {"q": "「口をはさむ」の意味として最も適切なものを選びなさい。", "options": ["人が話している途中で横から口出しする", "食べ物を噛む", "秘密を漏らす", "発言を撤回する"], "ans": 0, "exp": "他人の会話に割り込んで意見を言うことです。"}, {"q": "「顔が立つ」の意味として最も適切なものを選びなさい。", "options": ["世間に対する体面や立場が保たれる", "顔の形がはっきりしている", "有名になって知られる", "怒りで表情が硬くなる"], "ans": 0, "exp": "面目・体面が保たれることを「顔が立つ」と言います。"}, {"q": "「胸をなで下ろす」の意味として最も適切なものを選びなさい。", "options": ["安心・安堵する", "反省して後悔する", "呼吸を整える", "がっかりして落胆する"], "ans": 0, "exp": "危険や心配が去ってホッとする様子を表します。"}, {"q": "「目が届く」の意味として最も適切なものを選びなさい。", "options": ["注意や監視が十分に行き届く", "視力が回復する", "遠くまでよく見える", "読書に没頭する"], "ans": 0, "exp": "監督や配慮が細かいところまで及ぶことです。"}, {"q": "「曖昧」の対義語として最も適切なものを選びなさい。", "options": ["明瞭", "複雑", "明確", "正当"], "ans": 0, "exp": "「曖昧（はっきりしない）」の対義語は「明瞭（明確ではっきりしている）」です。"}, {"q": "「暗黒」の対義語として最も適切なものを選びなさい。", "options": ["光明", "漆黒", "鮮明", "明朗"], "ans": 0, "exp": "「暗黒（真っ暗）」の対義語は明るい光を指す「光明」です。"}, {"q": "「一般」の対義語として最も適切なものを選びなさい。", "options": ["特殊", "特定", "専門", "個別"], "ans": 0, "exp": "「一般（広く全体にわたる）」の対義語は「特殊（限られた特別のもの）」です。"}, {"q": "「移動」の対義語として最も適切なものを選びなさい。", "options": ["固定", "停止", "滞在", "静止"], "ans": 0, "exp": "「移動（動かして移す）」の対義語は「固定（動かないよう固める）」です。"}, {"q": "「栄転」の対義語として最も適切なものを選びなさい。", "options": ["降格", "左遷", "退職", "左降"], "ans": 0, "exp": "「栄転（良い役職・場所へ移る）」の対義語は低い役職等へ下げられる「左遷（または降格）」です。"}, {"q": "「延長」の対義語として最も適切なものを選びなさい。", "options": ["短縮", "縮小", "停止", "終了"], "ans": 0, "exp": "「延長（のばす）」の対義語は「短縮（ちぢめる）」です。"}, {"q": "「往復」の対義語として最も適切なものを選びなさい。", "options": ["片道", "復路", "片道切符", "直行"], "ans": 0, "exp": "「往復（行き帰り）」の対義語は行くことまたは帰ることだけの「片道」です。"}, {"q": "「解散」の対義語として最も適切なものを選びなさい。", "options": ["集合", "結集", "統合", "集中"], "ans": 0, "exp": "「解散（まとまったものが散る）」の対義語は「集合（あつまる）」です。"}, {"q": "「創刊」の類義語として最も適切なものを選びなさい。", "options": ["発刊", "廃刊", "休刊", "増刊"], "ans": 0, "exp": "「創刊」と「発刊」はどちらも新たに定期刊行物を刊行し始めることです。"}, {"q": "「変遷」の類義語として最も適切なものを選びなさい。", "options": ["推移", "移住", "回転", "進化"], "ans": 0, "exp": "「変遷」と「推移」は時代や状態が移り変わっていく様子を表します。"}, {"q": "「沈黙」の対義語として最も適切なものを選びなさい。", "options": ["雄弁", "多弁", "発言", "喧噪"], "ans": 0, "exp": "「沈黙（黙っている）」の対義語はスラスラとよく喋る「雄弁」や言葉数が多い「多弁」です。"}, {"q": "「希薄」の対義語として最も適切なものを選びなさい。", "options": ["濃厚", "濃密", "充実", "稠密"], "ans": 0, "exp": "「希薄（薄い・少ない）」の対義語は「濃厚（濃い）」です。"}, {"q": "「起伏」の対義語として最も適切なものを選びなさい。", "options": ["平坦", "水平", "平ら", "平然"], "ans": 0, "exp": "「起伏（高低・凹凸がある）」の対義語は高低がない「平坦」です。"}, {"q": "「義務」の対義語として最も適切なものを選びなさい。", "options": ["権利", "特権", "自由", "責任"], "ans": 0, "exp": "「義務（しなければならないこと）」の対義語は「権利（行うことができる主張）」です。"}, {"q": "「勤勉」の対義語として最も適切なものを選びなさい。", "options": ["怠惰", "怠慢", "横着", "無関心"], "ans": 0, "exp": "「勤勉（一生懸命働く・学ぶ）」の対義語はなまける「怠惰」です。"}, {"q": "「過密」の対義語として最も適切なものを選びなさい。", "options": ["過疎", "希薄", "疎遠", "空疎"], "ans": 0, "exp": "「過密（混み合いすぎている）」の対義語は人が少なくまばらな「過疎」です。"}, {"q": "「抽象」の対義語として最も適切なものを選びなさい。", "options": ["具体", "具象", "実体", "現実"], "ans": 0, "exp": "「抽象（共通の性質を抜き出す）」の対義語は形のある実体を扱う「具体」です。"}, {"q": "「過剰」の対義語として最も適切なものを選びなさい。", "options": ["不足", "欠如", "少量", "欠乏"], "ans": 0, "exp": "「過剰（多すぎて余る）」の対義語は足りないことを示す「不足」や「欠乏」です。"}, {"q": "「客観」の対義語として最も適切なものを選びなさい。", "options": ["主観", "悲観", "楽観", "直感"], "ans": 0, "exp": "「客観（第三者視点）」の対義語は自分の意識視点である「主観」です。"}, {"q": "「保守」の対義語として最も適切なものを選びなさい。", "options": ["革新", "進歩", "改革", "創造"], "ans": 0, "exp": "「保守（伝統を守る）」の対義語は新しく改める「革新」です。"}];
+
+        let currentIdx = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentIdx];
+            
+            // Progress Bar & Header
+            document.getElementById('question-count').innerText = `第 ${currentIdx + 1} 問 / ${questions.length} 問`;
+            document.getElementById('score-count').innerText = `正解数: ${score}`;
+            document.getElementById('progress-bar').style.width = `${((currentIdx + 1) / questions.length) * 100}%`;
+
+            // Question Text
+            document.getElementById('q-text').innerText = q.q;
+
+            // Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-option';
+                btn.innerText = `${idx + 1}. ${opt}`;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Hide Explanation & Next Button
+            document.getElementById('explanation-box').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'none';
+        }
+
+        function checkAnswer(selectedIdx) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentIdx];
+            const buttons = document.querySelectorAll('.btn-option');
+            
+            buttons.forEach(btn => btn.disabled = true);
+
+            const evalResult = document.getElementById('eval-result');
+            if (selectedIdx === q.ans) {
+                score++;
+                buttons[selectedIdx].classList.add('correct');
+                evalResult.innerText = '⭕ 正解！';
+                evalResult.style.color = '#276749';
+            } else {
+                buttons[selectedIdx].classList.add('wrong');
+                buttons[q.ans].classList.add('correct');
+                evalResult.innerText = '❌ 不正解...';
+                evalResult.style.color = '#9b2c2c';
+            }
+
+            document.getElementById('score-count').innerText = `正解数: ${score}`;
+            document.getElementById('explanation-text').innerText = q.exp;
+            document.getElementById('explanation-box').style.display = 'block';
+            document.getElementById('btn-next').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('quiz-screen').style.display = 'none';
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.style.display = 'block';
+
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('final-score').innerText = `${score} / 100 点 (${percentage}%)`;
+
+            let comment = '';
+            if (percentage === 100) {
+                comment = '素晴らしい！完璧です！中学校で習う類義語・対義語はバッチリマスターできています。';
+            } else if (percentage >= 80) {
+                comment = '高得点です！間違えた問題を復習して、完璧を目指しましょう！';
+            } else if (percentage >= 60) {
+                comment = '合格ラインです！反復練習してさらに精度を上げていきましょう。';
+            } else {
+                comment = 'もう一度教科書や問題を見直して再挑戦してみましょう！継続が力になります。';
+            }
+            document.getElementById('result-comment').innerText = comment;
+        }
+
+        function restartQuiz() {
+            currentIdx = 0;
+            score = 0;
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('quiz-screen').style.display = 'block';
+            loadQuestion();
+        }
+
+        // Initialize App
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
