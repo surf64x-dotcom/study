@@ -13,7 +13,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         body {
-            background-color: #f0f4f8;
+            background-color: #f4f6f8;
             color: #333;
             display: flex;
             justify-content: center;
@@ -23,14 +23,14 @@
         }
         .container {
             background-color: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             width: 100%;
             max-width: 650px;
             padding: 24px;
             position: relative;
-            overflow: hidden;
         }
+
         .btn-quit {
             position: absolute;
             top: 20px;
@@ -43,23 +43,25 @@
             font-size: 0.85rem;
             cursor: pointer;
             font-weight: bold;
-            transition: transform 0.1s ease, background 0.2s ease;
+            opacity: 0.9;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+        .btn-quit:hover {
+            opacity: 1;
         }
         .btn-quit:active {
-            transform: scale(0.95);
+            background-color: #c53030;
         }
 
-        /* 画面切り替えアニメーション（高速フェードイン＆スライド） */
+        /* 画面切り替え：ディゾルブ（フェードイン/フェードアウト） */
         .screen {
             display: none;
             opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.22s cubic-bezier(0, 0, 0.2, 1), transform 0.22s cubic-bezier(0, 0, 0.2, 1);
+            transition: opacity 0.25s ease-in-out;
         }
         .screen.active {
             display: block;
             opacity: 1;
-            transform: translateY(0);
         }
 
         /* タイトル画面 */
@@ -78,20 +80,24 @@
             line-height: 1.6;
             font-size: 0.95rem;
         }
+
+        /* ボタンデザイン（シンプルかつ軽やか） */
         .btn-start {
             background-color: #3182ce;
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 16px 40px;
-            font-size: 1.2rem;
+            border-radius: 8px;
+            padding: 14px 40px;
+            font-size: 1.15rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
-            transition: transform 0.12s ease, background 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn-start:hover {
+            background-color: #2b6cb0;
         }
         .btn-start:active {
-            transform: scale(0.96);
+            transform: scale(0.99);
         }
 
         /* カテゴリー選択画面 */
@@ -108,9 +114,9 @@
             gap: 10px;
         }
         .btn-cat {
-            background-color: #f7fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
             padding: 14px 16px;
             font-size: 0.95rem;
             text-align: left;
@@ -120,14 +126,15 @@
             align-items: center;
             font-weight: bold;
             color: #2d3748;
-            transition: transform 0.1s ease, border-color 0.2s ease, background 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
         }
         .btn-cat:hover {
-            background-color: #ebf8ff;
-            border-color: #63b3ed;
+            border-color: #cbd5e0;
+            background-color: #edf2f7;
         }
         .btn-cat:active {
-            transform: scale(0.98);
+            transform: scale(0.99);
+            background-color: #e2e8f0;
         }
         .cat-count {
             font-size: 0.8rem;
@@ -135,27 +142,29 @@
             background-color: #edf2f7;
             padding: 4px 8px;
             border-radius: 4px;
+            font-weight: normal;
         }
 
         /* クイズ画面 */
         .header {
-            border-bottom: 2px solid #eef2f5;
+            border-bottom: 1px solid #e2e8f0;
             padding-bottom: 12px;
             margin-bottom: 20px;
         }
         .cat-tag {
             font-size: 0.8rem;
-            background-color: #e2e8f0;
+            background-color: #edf2f7;
             color: #4a5568;
-            padding: 2px 8px;
+            padding: 3px 8px;
             border-radius: 4px;
             display: inline-block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            font-weight: bold;
         }
         .progress-bar-container {
-            background-color: #e2e8f0;
-            height: 8px;
-            border-radius: 4px;
+            background-color: #edf2f7;
+            height: 6px;
+            border-radius: 3px;
             overflow: hidden;
             margin-top: 8px;
         }
@@ -163,7 +172,7 @@
             background-color: #3182ce;
             height: 100%;
             width: 0%;
-            transition: width 0.3s ease-out;
+            transition: width 0.3s ease;
         }
         .status {
             display: flex;
@@ -185,7 +194,6 @@
             font-size: 0.85rem;
             color: #e53e3e;
             margin-top: 4px;
-            font-weight: normal;
         }
         .options {
             display: flex;
@@ -193,87 +201,71 @@
             gap: 10px;
         }
         .btn-option {
-            background-color: #f7fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
             padding: 12px 16px;
             font-size: 0.95rem;
             text-align: left;
             cursor: pointer;
             color: #2d3748;
-            transition: transform 0.12s ease, border-color 0.2s ease, background 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
         }
         .btn-option:hover:not(:disabled) {
-            background-color: #ebf8ff;
-            border-color: #63b3ed;
+            border-color: #a0aec0;
+            background-color: #f7fafc;
         }
         .btn-option:active:not(:disabled) {
-            transform: scale(0.98);
+            transform: scale(0.99);
+            background-color: #edf2f7;
         }
         .btn-option.selected {
             border-color: #3182ce;
             background-color: #ebf8ff;
         }
 
-        /* アニメーション：正解時（ぽんと弾む） */
+        /* 正解・不正解時のほんのりとした色変化 */
         .btn-option.correct {
-            background-color: #c6f6d5 !important;
+            background-color: #f0fff4 !important;
             border-color: #38a169 !important;
             color: #22543d !important;
             font-weight: bold;
-            animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        /* アニメーション：不正解時（横揺れ） */
         .btn-option.wrong {
-            background-color: #fed7d7 !important;
+            background-color: #fff5f5 !important;
             border-color: #e53e3e !important;
             color: #742a2a !important;
-            animation: shake 0.25s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0.98); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-6px); }
-            40% { transform: translateX(6px); }
-            60% { transform: translateX(-4px); }
-            80% { transform: translateX(4px); }
-        }
-
-        /* 解説ボックス（下から滑らかに出現） */
+        /* 解説ボックス（フェードイン表示） */
         .explanation-box {
-            margin-top: 16px;
+            margin-top: 18px;
             padding: 14px;
-            border-radius: 10px;
+            border-radius: 8px;
             background-color: #f7fafc;
             border-left: 4px solid #3182ce;
             display: none;
-            animation: slideUp 0.2s ease-out forwards;
+            opacity: 0;
+            transition: opacity 0.25s ease;
         }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+        .explanation-box.show {
+            display: block;
+            opacity: 1;
         }
 
         .explanation-title {
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             margin-bottom: 4px;
         }
         .explanation-text {
             font-size: 0.9rem;
             color: #4a5568;
-            line-height: 1.4;
+            line-height: 1.5;
         }
         .controls {
-            margin-top: 16px;
+            margin-top: 18px;
             display: flex;
             justify-content: flex-end;
         }
@@ -281,17 +273,19 @@
             background-color: #3182ce;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             padding: 10px 20px;
             font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
             display: none;
-            box-shadow: 0 3px 8px rgba(49, 130, 206, 0.3);
-            transition: transform 0.12s ease;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn-next:hover {
+            background-color: #2b6cb0;
         }
         .btn-next:active {
-            transform: scale(0.96);
+            transform: scale(0.99);
         }
 
         /* 結果画面 */
@@ -308,24 +302,23 @@
         .clear-message {
             background-color: #feebc8;
             color: #742a2a;
-            border: 2px solid #fbd38d;
-            border-radius: 10px;
+            border: 1px solid #fbd38d;
+            border-radius: 8px;
             padding: 16px;
             margin-bottom: 20px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             line-height: 1.5;
-            animation: popIn 0.3s ease-out forwards;
         }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 24px;
         }
         .stat-card {
             background-color: #f7fafc;
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 12px;
             border: 1px solid #e2e8f0;
         }
@@ -341,7 +334,7 @@
         }
         .action-btns {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
         }
         .btn-restart {
@@ -350,14 +343,16 @@
             border: none;
             border-radius: 8px;
             padding: 12px 24px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 3px 8px rgba(56, 161, 105, 0.3);
-            transition: transform 0.12s ease;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn-restart:hover {
+            background-color: #2f855a;
         }
         .btn-restart:active {
-            transform: scale(0.96);
+            transform: scale(0.99);
         }
         .btn-secondary {
             background-color: #718096;
@@ -365,13 +360,16 @@
             border: none;
             border-radius: 8px;
             padding: 12px 24px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.12s ease;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #4a5568;
         }
         .btn-secondary:active {
-            transform: scale(0.96);
+            transform: scale(0.99);
         }
     </style>
 </head>
@@ -456,7 +454,7 @@
         <div id="screen-result" class="screen result-box">
             <div class="result-title" id="res-title">セットクリア！</div>
             <div class="clear-message" id="clear-message" style="display: none;">
-                🎉 おめでとうございます！<br>全問クリア達成です！素晴らしい集中力です！
+                おめでとうございます！<br>全問クリア達成です！素晴らしい集中力です！
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
@@ -573,18 +571,27 @@
 
         const allAnswersPool = Array.from(new Set(rawDatabase.filter(d => d.ans).map(d => d.ans)));
 
+        // 画面ディゾルブ（フェード）切り替え
         function switchScreen(screenId) {
             const currentActive = document.querySelector('.screen.active');
             if (currentActive) {
-                currentActive.classList.remove('active');
-            }
-            setTimeout(() => {
+                currentActive.style.opacity = '0';
+                setTimeout(() => {
+                    currentActive.classList.remove('active');
+                    const target = document.getElementById(screenId);
+                    target.classList.add('active');
+                    setTimeout(() => {
+                        target.style.opacity = '1';
+                    }, 20);
+
+                    const btnQuit = document.getElementById('btn-quit');
+                    btnQuit.style.display = (screenId === 'screen-quiz' || screenId === 'screen-result') ? 'block' : 'none';
+                }, 200);
+            } else {
                 const target = document.getElementById(screenId);
                 target.classList.add('active');
-
-                const btnQuit = document.getElementById('btn-quit');
-                btnQuit.style.display = (screenId === 'screen-quiz' || screenId === 'screen-result') ? 'block' : 'none';
-            }, 50);
+                target.style.opacity = '1';
+            }
         }
 
         function showCategoryScreen() {
@@ -680,8 +687,18 @@
                 });
             }
 
-            document.getElementById('explanation-box').style.display = 'none';
+            const expBox = document.getElementById('explanation-box');
+            expBox.classList.remove('show');
+            expBox.style.display = 'none';
             document.getElementById('btn-next').style.display = 'none';
+        }
+
+        function showExplanation() {
+            const expBox = document.getElementById('explanation-box');
+            expBox.style.display = 'block';
+            setTimeout(() => {
+                expBox.classList.add('show');
+            }, 20);
         }
 
         function checkNormalAnswer(selectedOpt, selectedBtn, correctOpt) {
@@ -707,7 +724,7 @@
 
             updateStats();
             document.getElementById('explanation-text').innerText = setQuestions[currentIdx].exp;
-            document.getElementById('explanation-box').style.display = 'block';
+            showExplanation();
             document.getElementById('btn-next').style.display = 'inline-block';
         }
 
@@ -751,7 +768,7 @@
 
                 updateStats();
                 document.getElementById('explanation-text').innerText = q.exp;
-                document.getElementById('explanation-box').style.display = 'block';
+                showExplanation();
                 document.getElementById('btn-next').style.display = 'inline-block';
             }
         }
