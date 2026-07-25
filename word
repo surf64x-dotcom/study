@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>現代文・論説文の重要語マスター</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background-color: #f4f6f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 650px;
+            padding: 24px;
+            position: relative;
+        }
+
+        .btn-quit {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0.9;
+            transition: opacity 0.23s ease, background-color 0.23s ease;
+        }
+        .btn-quit:hover {
+            opacity: 1;
+        }
+        .btn-quit:active {
+            background-color: #c53030;
+        }
+
+        /* 画面切り替え：ディゾルブ（15%延長：0.25s → 0.29s） */
+        .screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.29s ease-in-out;
+        }
+        .screen.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* タイトル画面 */
+        .title-screen {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .title-screen h1 {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+        .title-screen p {
+            color: #718096;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* モード選択エリア */
+        .mode-selection {
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .mode-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+        .mode-options {
+            display: flex;
+            gap: 12px;
+        }
+        .btn-mode-select {
+            flex: 1;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #4a5568;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.23s ease;
+        }
+        .btn-mode-select.selected {
+            background-color: #ebf8ff;
+            border-color: #3182ce;
+            color: #2b6cb0;
+        }
+
+        .btn-start {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 40px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.23s ease, transform 0.11s ease;
+        }
+        .btn-start:hover {
+            background-color: #2b6cb0;
+        }
+        .btn-start:active {
+            transform: scale(0.99);
+        }
+
+        /* カテゴリー選択画面 */
+        .category-title {
+            font-size: 1.2rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .cat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-cat {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: #2d3748;
+            transition: background-color 0.23s ease, border-color 0.23s ease, transform 0.11s ease;
+        }
+        .btn-cat:hover {
+            border-color: #cbd5e0;
+            background-color: #edf2f7;
+        }
+        .btn-cat:active {
+            transform: scale(0.99);
+            background-color: #e2e8f0;
+        }
+        .cat-count {
+            font-size: 0.8rem;
+            color: #718096;
+            background-color: #edf2f7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: normal;
+        }
+
+        /* クイズ画面 */
+        .header {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        .cat-tag {
+            font-size: 0.8rem;
+            background-color: #edf2f7;
+            color: #4a5568;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .progress-bar-container {
+            background-color: #edf2f7;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .progress-bar {
+            background-color: #3182ce;
+            height: 100%;
+            width: 0%;
+            transition: width 0.35s ease;
+        }
+        .status {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 8px;
+        }
+        .question-box {
+            margin-bottom: 20px;
+        }
+        .question-text {
+            font-size: 1.15rem;
+            color: #1a202c;
+            line-height: 1.5;
+            font-weight: bold;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-option {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+            color: #2d3748;
+            transition: background-color 0.23s ease, border-color 0.23s ease, transform 0.11s ease;
+            line-height: 1.4;
+        }
+        .btn-option:hover:not(:disabled) {
+            border-color: #a0aec0;
+            background-color: #f7fafc;
+        }
+        .btn-option:active:not(:disabled) {
+            transform: scale(0.99);
+            background-color: #edf2f7;
+        }
+
+        .btn-option.correct {
+            background-color: #f0fff4 !important;
+            border-color: #38a169 !important;
+            color: #22543d !important;
+            font-weight: bold;
+        }
+        .btn-option.wrong {
+            background-color: #fff5f5 !important;
+            border-color: #e53e3e !important;
+            color: #742a2a !important;
+        }
+
+        /* 解説ボックス（15%延長：0.25s → 0.29s） */
+        .explanation-box {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 8px;
+            background-color: #f7fafc;
+            border-left: 4px solid #3182ce;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.29s ease;
+        }
+        .explanation-box.show {
+            display: block;
+            opacity: 1;
+        }
+        .explanation-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .explanation-text {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        .controls {
+            margin-top: 18px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .btn-next {
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.23s ease, transform 0.11s ease;
+        }
+        .btn-next:hover {
+            background-color: #2b6cb0;
+        }
+        .btn-next:active {
+            transform: scale(0.99);
+        }
+
+        /* 結果画面 */
+        .result-box {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .result-title {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .clear-message {
+            background-color: #feebc8;
+            color: #742a2a;
+            border: 1px solid #fbd38d;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background-color: #f7fafc;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .stat-num {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #718096;
+            margin-top: 4px;
+        }
+        .action-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        .btn-restart {
+            background-color: #38a169;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.23s ease, transform 0.11s ease;
+        }
+        .btn-restart:hover {
+            background-color: #2f855a;
+        }
+        .btn-restart:active {
+            transform: scale(0.99);
+        }
+        .btn-secondary {
+            background-color: #718096;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.23s ease, transform 0.11s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #4a5568;
+        }
+        .btn-secondary:active {
+            transform: scale(0.99);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- やめるボタン -->
+        <button class="btn-quit" id="btn-quit" onclick="resetToTitle()" style="display: none;">やめる</button>
+
+        <!-- 1. タイトル画面 -->
+        <div id="screen-title" class="screen active title-screen">
+            <h1>現代文・論説文の重要語</h1>
+            <p>文章読解に必要な評論用語をマスター！<br>出題モードを選んでスタートしよう。</p>
+
+            <div class="mode-selection">
+                <div class="mode-title">出題順（順序）モード</div>
+                <div class="mode-options">
+                    <button class="btn-mode-select selected" id="mode-order-fifty" onclick="setOrderMode('fifty')">五十音順モード</button>
+                    <button class="btn-mode-select" id="mode-order-random" onclick="setOrderMode('random')">ランダムモード</button>
+                </div>
+            </div>
+
+            <button class="btn-start" onclick="showCategoryScreen()">挑戦する</button>
+        </div>
+
+        <!-- 2. カテゴリー選択画面 -->
+        <div id="screen-category" class="screen">
+            <div class="category-title">挑戦するカテゴリーを選択</div>
+            <div class="cat-list">
+                <button class="btn-cat" onclick="startQuiz('all')">
+                    <span>🌟 すべての言葉（全問）</span>
+                    <span class="cat-count">10問ずつ出題</span>
+                </button>
+                <button class="btn-cat" onclick="startQuiz('a')">
+                    <span>あ行（アイデンティティ、アイロニー など）</span>
+                    <span class="cat-count">7語</span>
+                </button>
+                <button class="btn-cat" onclick="startQuiz('ka')">
+                    <span>か行（概念、カオス、仮説 など）</span>
+                    <span class="cat-count">5語</span>
+                </button>
+                <button class="btn-cat" onclick="startQuiz('sa')">
+                    <span>さ行（象徴、心象、ステレオタイプ など）</span>
+                    <span class="cat-count">10語</span>
+                </button>
+                <button class="btn-cat" onclick="startQuiz('ta')">
+                    <span>た行（対象、タブー、抽象、淘汰 など）</span>
+                    <span class="cat-count">9語</span>
+                </button>
+                <button class="btn-cat" onclick="startQuiz('na_ha')">
+                    <span>な・は行（パラダイム、バイアス など）</span>
+                    <span class="cat-count">10語</span>
+                </button>
+                <button class="btn-cat" onclick="startQuiz('ma_ra')">
+                    <span>ま〜ら行（メタファー、メディア、理性 など）</span>
+                    <span class="cat-count">15語</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. クイズ画面 -->
+        <div id="screen-quiz" class="screen">
+            <div class="header">
+                <span class="cat-tag" id="q-cat-name">カテゴリー</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="status">
+                    <span id="q-progress">第 1 問 / 10 問</span>
+                    <span>正解: <strong id="stat-correct">0</strong> | 誤答: <strong id="stat-wrong">0</strong> (正解率: <span id="stat-rate">0%</span>)</span>
+                </div>
+            </div>
+
+            <div class="question-box">
+                <div class="question-text" id="q-text">問題文がここに入ります</div>
+            </div>
+
+            <div class="options" id="options-container"></div>
+
+            <div class="explanation-box" id="explanation-box">
+                <div class="explanation-title" id="eval-result">解説</div>
+                <div class="explanation-text" id="explanation-text">解説文が入ります</div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-next" id="btn-next" onclick="nextQuestion()">次の問題へ</button>
+            </div>
+        </div>
+
+        <!-- 4. 結果・区切り画面 -->
+        <div id="screen-result" class="screen result-box">
+            <div class="result-title" id="res-title">セットクリア！</div>
+            <div class="clear-message" id="clear-message" style="display: none;">
+                おめでとうございます！<br>全問クリア達成です！素晴らしい集中力です！
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-num" id="res-correct">0</div>
+                    <div class="stat-label">正答数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="res-wrong" style="color: #e53e3e;">0</div>
+                    <div class="stat-label">誤回答数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="res-rate" style="color: #38a169;">0%</div>
+                    <div class="stat-label">正解率</div>
+                </div>
+            </div>
+            <div class="action-btns">
+                <button class="btn-restart" id="btn-continue" onclick="continueNextSet()">次の10問へ挑戦</button>
+                <button class="btn-secondary" onclick="showCategoryScreen()">カテゴリー一覧へ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const rawDatabase = [
+            {cat:"a", catName:"あ行", kana:"あいであんてぃてぃ", word:"アイデンティティ", mean:"自己同一性。自分が自分であることについての自己定義。", exp:"「自分が何者か」という確信を持つこと。"},
+            {cat:"a", catName:"あ行", kana:"あいろにー", word:"アイロニー", mean:"皮肉・反語。事実と反対の意を含ませた表現。", exp:"遊んでばかりいる子に「勉強がんばっているね」と言うような表現。"},
+            {cat:"a", catName:"あ行", kana:"あなーきずむ", word:"アナーキズム", mean:"無政府主義。無秩序なさまを表す言葉。", exp:"一切の政治的・社会的権力を否定する思想。"},
+            {cat:"a", catName:"あ行", kana:"あんちてーぜ", word:"アンチテーゼ", mean:"反対の命題。正論（テーゼ）に対する反対主張。", exp:"一つの命題に対して出される反対の主張。"},
+            {cat:"a", catName:"あ行", kana:"あんびばれんす", word:"アンビバレンス", mean:"同一の対象に対して相反する感情を抱くこと。", exp:"愛情と憎しみが同時に存在する状態など。"},
+            {cat:"a", catName:"あ行", kana:"いでおろぎー", word:"イデオロギー", mean:"政治や社会についての思想的な体系・意識構造。", exp:"歴史的・社会的な立場に制約された考え方。"},
+            {cat:"a", catName:"あ行", kana:"あいてぃー", word:"IT", mean:"インフォメーション・テクノロジー（情報技術）の略。", exp:"コンピューターやネットワークに関わる技術の総称。"},
+
+            {cat:"ka", catName:"か行", kana:"かいぎ", word:"懐疑(かいぎ)", mean:"物事の意味や価値などについて、疑いを持つこと。", exp:"物事を真実と認めず、疑う態度をとること。"},
+            {cat:"ka", catName:"か行", kana:"がいねん", word:"概念(がいねん)", mean:"物事に対する、枠組みとしてのとらえ方。コンセプト。", exp:"あるものの全体的な意味や思考の枠組み。"},
+            {cat:"ka", catName:"か行", kana:"かおす", word:"カオス", mean:"秩序のない混乱した状態。混沌。", exp:"すべてのものが混ざり合って整っていない状態。"},
+            {cat:"ka", catName:"か行", kana:"かせつ", word:"仮説(かせつ)", mean:"ある現象を理論的に説明するために仮定された説。", exp:"観察や実験などで検証される前の段階の仮の説。"},
+            {cat:"ka", catName:"か行", kana:"かてごりー", word:"カテゴリー", mean:"物事を分類するときの枠組み。範疇。", exp:"共通する性質に基づいて分けた区分。"},
+
+            {cat:"sa", catName:"さ行", kana:"じつぞんしゅぎ", word:"実存主義(じつぞんしゅぎ)", mean:"個別の・具体的な一回限りの人間存在を重んじる立場。", exp:"サルトルやハイデガーに代表される哲学思考。"},
+            {cat:"sa", catName:"さ行", kana:"しにかる", word:"シニカル", mean:"他人を見下した冷やかな態度。皮肉なさま。", exp:"冷笑的で皮肉っぽい態度をとること。"},
+            {cat:"sa", catName:"さ行", kana:"しゅうじ", word:"修辞(しゅうじ)", mean:"言葉の技術や技巧を用いて効果的な表現をすること。", exp:"レトリックとも呼ばれる巧みな文章表現表現。"},
+            {cat:"sa", catName:"さ行", kana:"しゅかん", word:"主観(しゅかん)", mean:"物事を自分の立場から観察したり考えたりすること。", exp:"自分ひとりの見方や感想に偏った考え。"},
+            {cat:"sa", catName:"さ行", kana:"しょうちょう", word:"象徴(しょうちょう)", mean:"直接に知覚できない事象を具体的なもので表すこと。", exp:"シンボル。平和の象徴としての鳩など。"},
+            {cat:"sa", catName:"さ行", kana:"しんしょう", word:"心象(しんしょう)", mean:"心に浮かんだ姿や像。イメージ。", exp:"記憶や想像によって心に浮かぶ景色や像。"},
+            {cat:"sa", catName:"さ行", kana:"じんこうちのう", word:"人工知能(じんこうちのう)", mean:"コンピューターに知的行動を行わせる技術。AI。", exp:"人間の脳の知能機能を模倣するシステム。"},
+            {cat:"sa", catName:"さ行", kana:"すてれおたいぷ", word:"ステレオタイプ", mean:"ものの見方や考え方が型にはまっていること。固定観念。", exp:"先入観や紋切り型の発想にとらわれていること。"},
+            {cat:"sa", catName:"さ行", kana:"ぜったい", word:"絶対(ぜったい)", mean:"他との比較・関連によらずに存在すること。", exp:"他に比べるもののない絶対的な状態。"},
+            {cat:"sa", catName:"さ行", kana:"そうたい", word:"相対(そうたい)", mean:"他との比較・関連によって存在するもの。", exp:"他との関係性の中で価値や位置が決まること。"},
+
+            {cat:"ta", catName:"た行", kana:"たいしょう", word:"対象(たいしょう)", mean:"人間のはたらきかけ（意識・行為）が向けられるもの。", exp:"行為や感情、思考の目当てとなる相手や物。"},
+            {cat:"ta", catName:"た行", kana:"たぶー", word:"タブー", mean:"神聖なもの・禁止された観念や風習。禁忌。", exp:"触れてはいけない・やってはいけないとされる事柄。"},
+            {cat:"ta", catName:"た行", kana:"ちゅうしょう", word:"抽象(ちゅうしょう)", mean:"多くの事物から共通する側面を抜き出すこと。", exp:"具体的な個別の違いを捨て、共通点をまとめること。"},
+            {cat:"ta", catName:"た行", kana:"じれんま", word:"ディレマ（ジレンマ）", mean:"二つの相反する事柄の板挟みになって困ること。", exp:"あちらを立てればこちらが立たない状態。"},
+            {cat:"ta", catName:"た行", kana:"にりつはいはん", word:"二律背反(にりつはいはん)", mean:"相互に矛盾する二つの事柄が同等に存在すること。", exp:"両立し得ない二つの命題が共に主張されること。"},
+            {cat:"ta", catName:"た行", kana:"とうた", word:"淘汰(とうた)", mean:"不用なものを取り除くこと。環境に適応するものが生き残ること。", exp:"自然淘汰や条件に合わないものの排除。"},
+            {cat:"ta", catName:"た行", kana:"にげんろん", word:"二元論(にげんろん)", mean:"異なる二つの原理で事物を説明しようとする考え方。", exp:"光と闇、精神と物質などの二大原理で捉える立場。"},
+            {cat:"ta", catName:"た行", kana:"にひりずむ", word:"ニヒリズム", mean:"この世の一切の価値や秩序を否定する考え方。虚無主義。", exp:"絶対的な真理や価値の存在を否定する立場。"},
+            {cat:"ta", catName:"た行", kana:"にゅあんす", word:"ニュアンス", mean:"色・音・感情などの微妙な差異や細かい意味合い。", exp:"言葉や表現の微妙なニュアンスの違い。"},
+
+            {cat:"na_ha", catName:"な・は行", kana:"のすたるじあ", word:"ノスタルジア", mean:"過去や故郷を懐かしむ気持ち。郷愁。", exp:"過ぎ去った日々や故郷を慕う切ない心。"},
+            {cat:"na_ha", catName:"な・は行", kana:"ばいあす", word:"バイアス", mean:"考え方や見方、意見に偏りを生じさせるもの。偏見。", exp:"認知や判断の先入観・歪み。"},
+            {cat:"na_ha", catName:"な・は行", kana:"ぱらだいむ", word:"パラダイム", mean:"ある時代の支配的な思考の枠組みのこと。", exp:"科学や思想において時代を規定する概念的フレーム。"},
+            {cat:"na_ha", catName:"な・は行", kana:"ぺしみずむ", word:"ペシミズム", mean:"世界や人生を否定的に捉える立場。悲観主義。", exp:"物事を悪く悲観的に見る考え方。"},
+            {cat:"na_ha", catName:"な・は行", kana:"べんしょうほう", word:"弁証法(べんしょうほう)", mean:"対立・矛盾する二つの概念を統合し高次元へ発展させる方法。", exp:"テーゼとアンチテーゼからジンテーゼを導く思考。"},
+            {cat:"na_ha", catName:"な・は行", kana:"かんねん", word:"観念(かんねん)", mean:"頭の中にある考えやイメージ、先入観。", exp:"事象に対して抱く意識や観念。"},
+            {cat:"na_ha", catName:"な・は行", kana:"きのう", word:"帰納(きのう)", mean:"個別の事実から一般的な原理や法則を導き出すこと。", exp:"具体的な観察事例から共通の法則を導く方法。"},
+            {cat:"na_ha", catName:"な・は行", kana:"ぎゃくせつ", word:"逆説(ぎゃくせつ)", mean:"一見真理に背いているようだが、真理を突いている説。パラドックス。", exp:"「急がば回れ」のように一見矛盾して見える言葉。"},
+            {cat:"na_ha", catName:"な・は行", kana:"きゃっかん", word:"客観(きゃっかん)", mean:"第三者の立場から観察したり評価したりすること。", exp:"誰が見ても納得できる普遍的な視点。"},
+            {cat:"na_ha", catName:"な・は行", kana:"きょうせい", word:"共生(きょうせい)", mean:"異種の生物や人間が共に生きていくこと。", exp:"共に助け合って生存・生活する状態。"},
+
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"ぽすともだん", word:"ポストモダン", mean:"近代（モダン）の次に来る時代や思考のこと。", exp:"単一性や進歩を志向した近代を批判する考え方。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"まいのりてぃ", word:"マイノリティ", mean:"少数者、少数派のこと。", exp:"集団の中で数が少ないグループ。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"まくろ", word:"マクロ", mean:"巨大であること。巨視的であること。", exp:"全体を大きく全体像として捉える視点。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"ますこみゅにけーしょん", word:"マスコミュニケーション", mean:"不特定多数の人々に大量の情報を伝達すること。", exp:"新聞・テレビなどの大衆媒体による情報伝達。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"めたふぁー", word:"メタファー", mean:"比喩の一方法である「隠喩（暗喩）」。", exp:"「〜のようだ」を使わずに例える表現方法。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"めでぃあ", word:"メディア", mean:"媒体。手段。新聞・テレビなどの情報媒体。", exp:"情報を伝達するための媒体や手段。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"もちーふ", word:"モチーフ", mean:"創作の動機となった中心的な題材や思想。", exp:"作品の根底にあるテーマや題材。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"もりとりあむ", word:"モラトリアム", mean:"社会に出る準備期間として責任が免除される一定の期間。", exp:"青年期における自己形成のための猶予期間。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"もらる", word:"モラル", mean:"社会の中でそうあるべきとされる振る舞い。道徳。", exp:"倫理や道徳、社会的な道義を守ること。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"ゆうき", word:"有機(ゆうき)", mean:"密接な統一・関連を持っていること。有機体。", exp:"各部分が互いに深く結びついている様。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"ゆにばーさるでざいん", word:"ユニバーサルデザイン", mean:"障害の有無にかかわらずすべての人が使いやすいデザイン。", exp:"年齢や言語を問わず利用できる製品・環境設計。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"りせい", word:"理性(りせい)", mean:"物事を論理的に考える頭の働き。", exp:"感情に流されず筋道立てて思考する能力。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"りてらしー", word:"リテラシー", mean:"読み書きの能力。情報を適切に活用する能力。", exp:"情報を精査し使いこなす活用能力。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"りんり", word:"倫理(りんり)", mean:"社会生活で人が守るべき道理。行動規範。", exp:"道徳や人として守るべき規範。"},
+            {cat:"ma_ra", catName:"ま〜ら行", kana:"ろごす", word:"ロゴス", mean:"言葉・理性・理論・論理などを意味するギリシア語。", exp:"論理的な思考や言葉、法則のこと。"}
+        ];
+
+        let selectedOrderMode = 'fifty';
+        let currentPool = [];
+        let setQuestions = [];
+        let currentIdx = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+
+        const allMeansPool = Array.from(new Set(rawDatabase.map(d => d.mean)));
+        const allWordsPool = Array.from(new Set(rawDatabase.map(d => d.word)));
+
+        function setOrderMode(mode) {
+            selectedOrderMode = mode;
+            document.getElementById('mode-order-fifty').classList.toggle('selected', mode === 'fifty');
+            document.getElementById('mode-order-random').classList.toggle('selected', mode === 'random');
+        }
+
+        // 画面切り替えタイマー調整（15%延長：200ms → 230ms）
+        function switchScreen(screenId) {
+            const currentActive = document.querySelector('.screen.active');
+            if (currentActive) {
+                currentActive.style.opacity = '0';
+                setTimeout(() => {
+                    currentActive.classList.remove('active');
+                    const target = document.getElementById(screenId);
+                    target.classList.add('active');
+                    setTimeout(() => {
+                        target.style.opacity = '1';
+                    }, 20);
+
+                    const btnQuit = document.getElementById('btn-quit');
+                    btnQuit.style.display = (screenId === 'screen-quiz' || screenId === 'screen-result') ? 'block' : 'none';
+                }, 230);
+            } else {
+                const target = document.getElementById(screenId);
+                target.classList.add('active');
+                target.style.opacity = '1';
+            }
+        }
+
+        function showCategoryScreen() {
+            switchScreen('screen-category');
+        }
+
+        function resetToTitle() {
+            currentPool = [];
+            setQuestions = [];
+            currentIdx = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            switchScreen('screen-title');
+        }
+
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startQuiz(categoryKey) {
+            let filtered = (categoryKey === 'all') ? [...rawDatabase] : rawDatabase.filter(item => item.cat === categoryKey);
+
+            if (selectedOrderMode === 'fifty') {
+                currentPool = filtered.sort((a, b) => a.kana.localeCompare(b.kana, 'ja'));
+            } else {
+                currentPool = shuffle(filtered);
+            }
+
+            correctCount = 0;
+            wrongCount = 0;
+            startNewSet();
+        }
+
+        function startNewSet() {
+            setQuestions = currentPool.slice(0, 10);
+            currentPool = currentPool.slice(10);
+            currentIdx = 0;
+
+            switchScreen('screen-quiz');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = setQuestions[currentIdx];
+
+            document.getElementById('q-cat-name').innerText = `${q.catName} (${selectedOrderMode === 'fifty' ? '五十音順' : 'ランダム'})`;
+            document.getElementById('q-progress').innerText = `第 ${currentIdx + 1} 問 / ${setQuestions.length} 問`;
+            document.getElementById('stat-correct').innerText = correctCount;
+            document.getElementById('stat-wrong').innerText = wrongCount;
+
+            const total = correctCount + wrongCount;
+            const rate = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('stat-rate').innerText = `${rate}%`;
+            document.getElementById('progress-bar').style.width = `${((currentIdx + 1) / setQuestions.length) * 100}%`;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            const isWordToMean = (currentIdx % 2 === 0);
+
+            if (isWordToMean) {
+                document.getElementById('q-text').innerText = `「${q.word}」の意味として正しいものは？`;
+                let dummies = shuffle(allMeansPool.filter(m => m !== q.mean)).slice(0, 3);
+                let options = shuffle([q.mean, ...dummies]);
+
+                options.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-option';
+                    btn.innerText = opt;
+                    btn.onclick = () => checkAnswer(opt, btn, q.mean, q.exp);
+                    container.appendChild(btn);
+                });
+            } else {
+                document.getElementById('q-text').innerText = `【意味】${q.mean}\nにあてはまる言葉は？`;
+                let dummies = shuffle(allWordsPool.filter(w => w !== q.word)).slice(0, 3);
+                let options = shuffle([q.word, ...dummies]);
+
+                options.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-option';
+                    btn.innerText = opt;
+                    btn.onclick = () => checkAnswer(opt, btn, q.word, q.exp);
+                    container.appendChild(btn);
+                });
+            }
+
+            const expBox = document.getElementById('explanation-box');
+            expBox.classList.remove('show');
+            expBox.style.display = 'none';
+            document.getElementById('btn-next').style.display = 'none';
+        }
+
+        function checkAnswer(selectedOpt, selectedBtn, correctOpt, expText) {
+            const buttons = document.querySelectorAll('.btn-option');
+            buttons.forEach(btn => btn.disabled = true);
+
+            const evalResult = document.getElementById('eval-result');
+
+            if (selectedOpt === correctOpt) {
+                correctCount++;
+                selectedBtn.classList.add('correct');
+                evalResult.innerText = '⭕ 正解！';
+                evalResult.style.color = '#276749';
+            } else {
+                wrongCount++;
+                selectedBtn.classList.add('wrong');
+                buttons.forEach(btn => {
+                    if (btn.innerText === correctOpt) btn.classList.add('correct');
+                });
+                evalResult.innerText = '❌ 不正解...';
+                evalResult.style.color = '#9b2c2c';
+            }
+
+            updateStats();
+            document.getElementById('explanation-text').innerText = expText;
+            
+            const expBox = document.getElementById('explanation-box');
+            expBox.style.display = 'block';
+            setTimeout(() => expBox.classList.add('show'), 20);
+
+            document.getElementById('btn-next').style.display = 'inline-block';
+        }
+
+        function updateStats() {
+            document.getElementById('stat-correct').innerText = correctCount;
+            document.getElementById('stat-wrong').innerText = wrongCount;
+            const total = correctCount + wrongCount;
+            const rate = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('stat-rate').innerText = `${rate}%`;
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < setQuestions.length) {
+                loadQuestion();
+            } else {
+                showSetResult();
+            }
+        }
+
+        function showSetResult() {
+            switchScreen('screen-result');
+            const total = correctCount + wrongCount;
+            const rate = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+            document.getElementById('res-correct').innerText = correctCount;
+            document.getElementById('res-wrong').innerText = wrongCount;
+            document.getElementById('res-rate').innerText = `${rate}%`;
+
+            const btnContinue = document.getElementById('btn-continue');
+            const clearMsg = document.getElementById('clear-message');
+
+            if (currentPool.length > 0) {
+                document.getElementById('res-title').innerText = "10問セットクリア！";
+                btnContinue.style.display = 'inline-block';
+                clearMsg.style.display = 'none';
+            } else {
+                document.getElementById('res-title').innerText = "全問クリア！";
+                btnContinue.style.display = 'none';
+                clearMsg.style.display = 'block';
+            }
+        }
+
+        function continueNextSet() {
+            startNewSet();
+        }
+    </script>
+</body>
+</html>
